@@ -10,7 +10,7 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Language Learning</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)"/>
-      <TextInput style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/>
+      <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/>
     </View>
   );
 }
