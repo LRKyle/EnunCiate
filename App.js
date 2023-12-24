@@ -1,22 +1,32 @@
 import React from 'react'
+import * as eva from '@eva-design/eva'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text} from 'react-native';
+import {ApplicationProvider, Input, Layout, Select, SelectItem, IndexPath} from '@ui-kitten/components'
 
 export default function App() {
   const [value, setValue] = React.useState('');
+  const [selectedIndex, setSelectedIndex] = React.useState<IndexPath | IndexPath[0]>(new IndexPath(0));
+//<StatusBar style="auto" />
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <TextInput style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/>
-      <StatusBar style="auto" />
-      <Text>{value}</Text>
-    </View>
+    <ApplicationProvider {...eva} theme = {eva.dark}>
+      <Layout style={styles.container}>
+        <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/>
+        <Text>{value}</Text>
+        <Select selectedIndex={selectedIndex} onSelect={index => setSelectedIndex(index)}>
+          <SelectItem title='Option 1'/>
+          <SelectItem title='Option 2'/>
+          <SelectItem title='Option 3'/>
+        </Select>
+      </Layout>
+    </ApplicationProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -31,9 +41,9 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 1,  // Obv
     borderHeight: 5, // Obv
-    borderRadius: 5, //Controls how round the corners
+    borderRadius: 10, //Controls how round the corners
     paddingTop: 10,
     paddingBottom: 10, //Padding = The space away from the input
-    paddingLeft: 10, //Can't explain fr
+    paddingLeft: 10,
   },
 });
