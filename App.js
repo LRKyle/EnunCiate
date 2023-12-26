@@ -4,35 +4,36 @@ import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem} from '@ui-kitten/components'
 
 const data = [
-  { text: 'Option 1' },
-  { text: 'Option 2' },
-  { text: 'Option 3' },
+  { text: 'EN' },
+  { text: 'FR' },
+  { text: 'RUS' },
 ];
 
 export default function App() {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedValue, setSelectedValue] = useState('Select Option');
+
   const onSelect = (index) => {
     setSelectedIndex(index);
+    setSelectedValue(data[index.row].text);
   };
   
-
+//style={{flexDirection:'row'}}
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
-        <Layout style={{flexDirection:'row'}}>
-        <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
-        <Select
-        selectedIndex={selectedIndex}
-        onSelect={onSelect}
-        value={selectedIndex ? data[selectedIndex.row].text : 'Select Option'}
-        >
-        {data.map((item, index) => (
-          <SelectItem key={index} title={item.text} />
-        ))}
+        <Layout style={styles.row}>
+          <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
+          <Select
+            selectedIndex={selectedIndex}
+            onSelect={onSelect}
+            value={selectedValue}
+          >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
         </Select>
         </Layout>
-        <Text>Lois</Text>
+        <Text style ={{color: 'red'}}>{value}</Text>
+        <Text style ={{color: 'blue'}}>{selectedIndex}</Text>
       </Layout>
     </ApplicationProvider>
   );
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
 
   row:{
     flexDirection: 'row',
+    alignItems: 'center'
   },
 
   input: {
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
     color: 'black',
     width: '50%',
     //textAlign: 'center',
-    borderColor: 'white',
+    borderColor: 'black',
     borderWidth: 1,  // Obv
     borderHeight: 5, // Obv
     borderRadius: 10, //Controls how round the corners
