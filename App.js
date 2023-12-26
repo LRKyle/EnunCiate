@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet} from 'react-native'
-import {ApplicationProvider, Input, Layout, Text, Select, SelectItem} from '@ui-kitten/components'
+import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
 
 const data = [
   { text: 'EN' },
@@ -12,17 +12,21 @@ const data = [
 export default function App() {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedValue, setSelectedValue] = useState('Select Option');
+  const [selectedValue, setSelectedValue] = useState('Select A Language');//Get the first value
 
   const onSelect = (index) => {
     setSelectedIndex(index);
     setSelectedValue(data[index.row].text);
   };
-  
-//style={{flexDirection:'row'}}
+  //Instead of {"\n"}, use margin
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
+        <Layout>
+          <Text category='h1'>Language Learning</Text>
+          <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
+          <Divider style = {styles.test}/>
+        </Layout>
         <Layout style={styles.row}>
           <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
           <Select
@@ -31,9 +35,9 @@ export default function App() {
             onSelect={onSelect}
             value={selectedValue}
           >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
-        </Select>
+          </Select>
         </Layout>
-        <Text style ={{color: 'white'}}>Searching... {value} from.. {selectedValue}</Text>
+        <Button style = {{margin: 2}}appearance='outline'>Analyze your voice!</Button> 
       </Layout>
     </ApplicationProvider>
   );
@@ -51,8 +55,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
-
-
 
   input: {
     fontSize: 15,
