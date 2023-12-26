@@ -1,32 +1,53 @@
-import React from 'react'
+import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
-import { StyleSheet} from 'react-native'
-import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, IndexPath} from '@ui-kitten/components'
+import {StyleSheet} from 'react-native'
+import {ApplicationProvider, Input, Layout, Text, Select, SelectItem} from '@ui-kitten/components'
+
+const data = [
+  { text: 'Option 1' },
+  { text: 'Option 2' },
+  { text: 'Option 3' },
+];
 
 export default function App() {
   const [value, setValue] = React.useState('');
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const onSelect = (index) => {
+    setSelectedIndex(index);
+  };
+  
+
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
-
-      <Text>{value}</Text>
       <Layout style={styles.container}>
-        <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/>
+        <Layout style={{flexDirection:'row'}}>
+        <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
+        <Select
+        selectedIndex={selectedIndex}
+        onSelect={onSelect}
+        value={selectedIndex ? data[selectedIndex.row].text : 'Select Option'}
+        >
+        {data.map((item, index) => (
+          <SelectItem key={index} title={item.text} />
+        ))}
+        </Select>
+        </Layout>
+        <Text>Lois</Text>
       </Layout>
     </ApplicationProvider>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  text:{
-    color: "red",
+  row:{
+    flexDirection: 'row',
   },
 
   input: {
