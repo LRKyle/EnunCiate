@@ -37,7 +37,7 @@ export default function App() {
           >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style = {{margin: 2}}appearance='outline'>Analyze your voice!</Button> 
+        <Button style = {{margin: 2}} appearance='outline'>Analyze your voice!</Button> 
       </Layout>
     </ApplicationProvider>
   );
