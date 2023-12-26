@@ -26,14 +26,14 @@ export default function App() {
         <Layout style={styles.row}>
           <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
           <Select
+            style = {{width: '30%'}}
             selectedIndex={selectedIndex}
             onSelect={onSelect}
             value={selectedValue}
           >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
         </Select>
         </Layout>
-        <Text style ={{color: 'red'}}>{value}</Text>
-        <Text style ={{color: 'blue'}}>{selectedIndex}</Text>
+        <Text style ={{color: 'white'}}>Searching... {value} from.. {selectedValue}</Text>
       </Layout>
     </ApplicationProvider>
   );
@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+
+
 
   input: {
     fontSize: 15,
