@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Pressable} from 'react-native'
+import {Link} from 'expo-router'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
 
 const data = [
@@ -12,13 +13,13 @@ const data = [
 export default function App() {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedValue, setSelectedValue] = useState('Select A Language');//Get the first value
+  const [selectedValue, setSelectedValue] = useState('Select A Language');
 
   const onSelect = (index) => {
     setSelectedIndex(index);
     setSelectedValue(data[index.row].text);
   };
-  //Instead of {"\n"}, use margin
+
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
@@ -37,12 +38,12 @@ export default function App() {
           >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button status='warning' appearance='outline'>Analyze your voice!</Button> 
+        <Button status='success' appearance='outline'>Analyze your voice!</Button>
+        <Link style={{marginTop: 15}}replace href='/Search'>PLEASEEEEEEEEEEEEEEEE</Link>
       </Layout>
-    </ApplicationProvider>
+    </ApplicationProvider>    
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
