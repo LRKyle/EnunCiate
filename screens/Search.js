@@ -20,7 +20,7 @@ export const Search = ({getPage}) => {
     setSelectedValue(data[index.row].text);
   };
 
-  pageSetter = () => {
+  const pageSetter = () => {
     getPage("Analyze");
   }
 
@@ -42,7 +42,7 @@ export const Search = ({getPage}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={this.pageSetter}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={pageSetter}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );

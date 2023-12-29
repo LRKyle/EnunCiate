@@ -6,17 +6,16 @@ import {Analyze} from './screens/Analyze'
 var curPage = "Home"
 
 export default class App extends Component {  
-  constructor(props){
-    super(props);
-    this.state = {
-      curPage: "Home",
-      dataFromSearch: null
-    };
-  }
- 
-  setPage = (data) => {
-    this.setState({ curPage: "Analyze", dataFromSearch: data });
-  }
+constructor(props){
+   super(props);
+   this.state = {
+     curPage: "Home"
+   };
+ }
+
+ setPage = (data) => {
+   this.setState({ curPage: "Analyze"});
+ }
 
   render(){  
     const { curPage } = this.state;
