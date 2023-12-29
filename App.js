@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
-import {StyleSheet, Pressable} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {Link} from 'expo-router'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
 
@@ -22,25 +22,24 @@ export default function App() {
 
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
-      <Layout style={styles.container}>
-        <Layout>
-          <Text category='h1'>Language Learning</Text>
-          <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
-          <Divider style = {styles.test}/>
+        <Layout style={styles.container}>
+          <Layout>
+            <Text category='h1'>Language Learning</Text>
+            <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
+            <Divider style = {styles.test}/>
+          </Layout>
+          <Layout style={styles.row}>
+            <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
+            <Select
+              style = {{width: '30%'}}
+              selectedIndex={selectedIndex}
+              onSelect={onSelect}
+              value={selectedValue}>
+            {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
+            </Select>
+          </Layout>
+          <Button style={{marginTop: 5}} status='success' appearance='outline'><Link href='/App' isReady>Analyze your pronunciation!</Link></Button>
         </Layout>
-        <Layout style={styles.row}>
-          <Input style ={styles.input} placeholder = 'Enter a word' value={value} onChangeText={nextValue => setValue(nextValue)}/> 
-          <Select
-            style = {{width: '30%'}}
-            selectedIndex={selectedIndex}
-            onSelect={onSelect}
-            value={selectedValue}
-          >{data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
-          </Select>
-        </Layout>
-        <Button status='success' appearance='outline'>Analyze your voice!</Button>
-        <Link style={{marginTop: 15}}replace href='/Search'>PLEASEEEEEEEEEEEEEEEE</Link>
-      </Layout>
     </ApplicationProvider>    
   );
 }
