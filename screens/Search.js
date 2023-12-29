@@ -9,7 +9,7 @@ const data = [
   { text: 'RUS' },
 ];
 
-export const Search = ({setPage, getPage}) => {
+export const Search = ({getPage}) => {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState('Select A Language');
@@ -20,16 +20,14 @@ export const Search = ({setPage, getPage}) => {
     setSelectedValue(data[index.row].text);
   };
 
-  const pageSetter = () => {
-    getPage("Analyze")
-  };
-  
+  pageSetter = () => {
+    getPage("Analyze");
+  }
 
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
-        <Layout>
-          <Text>2{setPage}</Text>
+        <Layout>  
           <Text category='h1'>Language Learning</Text>
           <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
           <Divider style = {styles.test}/>
@@ -44,7 +42,7 @@ export const Search = ({setPage, getPage}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={pageSetter}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={this.pageSetter}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );
