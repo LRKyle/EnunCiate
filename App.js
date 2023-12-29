@@ -13,8 +13,8 @@ constructor(props){
    };
  }
 
- setPage = (data) => {
-   this.setState({ curPage: "Analyze"});
+ setPage = (nextPage) => {
+   this.setState({ curPage: nextPage});
  }
 
   render(){  
@@ -24,7 +24,7 @@ constructor(props){
         return <Search getPage={this.setPage} setPage={curPage}/>
       case "Analyze":
         console.log("Yo?")
-        return <Analyze/>
+        return <Analyze getPage={this.setPage} setPage={curPage}/>
     }
   }
 }
