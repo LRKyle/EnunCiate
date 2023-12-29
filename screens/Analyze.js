@@ -5,6 +5,7 @@ import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Bu
 
 
 export const Analyze = () => {
+    
     return (
         <ApplicationProvider {...eva} theme = {eva.dark}>
             <Layout style= {styles.container}>

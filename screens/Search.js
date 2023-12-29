@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
-import {Link} from 'expo-router'
 
 const data = [
   { text: 'EN' },
@@ -10,20 +9,27 @@ const data = [
   { text: 'RUS' },
 ];
 
-export const Search = () => {
+export const Search = ({setPage, getPage}) => {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState('Select A Language');
 
+  
   const onSelect = (index) => {
     setSelectedIndex(index);
     setSelectedValue(data[index.row].text);
   };
 
+  const pageSetter = () => {
+    getPage("Analyze")
+  };
+  
+
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
         <Layout>
+          <Text>2{setPage}</Text>
           <Text category='h1'>Language Learning</Text>
           <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
           <Divider style = {styles.test}/>
@@ -38,7 +44,7 @@ export const Search = () => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline'><Link href='/App' isReady>Analyze your pronunciation!</Link></Button>
+        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={pageSetter}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );
