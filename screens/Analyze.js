@@ -5,11 +5,11 @@ import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Bu
 
 
 export const Analyze = ({route}) => {
-    const {searchVal} = route.params
+    const {searchVal, langVal} = route.params
     return (
         <ApplicationProvider {...eva} theme = {eva.dark}>
             <Layout style= {styles.container}>
-                <Button status='warning' appearance='outline'>{searchVal}</Button>
+                <Button status='warning' appearance='outline'>Search for {searchVal} in {langVal}</Button>
             </Layout>
         </ApplicationProvider>
     );
