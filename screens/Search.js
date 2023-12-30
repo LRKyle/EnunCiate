@@ -21,7 +21,7 @@ export const Search = ({getPage}) => {
   };
 
   const pageSetter = () => {
-    getPage("Analyze");
+    getPage("Analyze", {value});
   }
 
   return (

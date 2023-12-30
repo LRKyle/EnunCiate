@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
 
 
-export const Analyze = ({getPage}) => {
+export const Analyze = ({getPage}, {searchVal}, {langVal}) => {
     
     const pageSetter = () => {
         getPage("Home");
