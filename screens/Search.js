@@ -22,7 +22,7 @@ export const Search = ({navigation}) => {
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
       <Layout style={styles.container}>
-        <Layout>  
+        <Layout> 
           <Text category='h1'>Language Learning</Text>
           <Text style={{textAlign: 'center'}}>Voice Analyzer{"\n"}</Text>
           <Divider style = {styles.test}/>
@@ -37,7 +37,7 @@ export const Search = ({navigation}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline'onPress={() => navigation.navigate("Analyze")}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );

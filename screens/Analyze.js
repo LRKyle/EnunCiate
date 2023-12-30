@@ -4,12 +4,12 @@ import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider,Button} from '@ui-kitten/components'
 
 
-export const Analyze = () => {
-    
+export const Analyze = ({route}) => {
+    const {searchVal} = route.params
     return (
         <ApplicationProvider {...eva} theme = {eva.dark}>
             <Layout style= {styles.container}>
-                <Button status='warning' appearance='outline'>One Step Ahead</Button>
+                <Button status='warning' appearance='outline'>{searchVal}</Button>
             </Layout>
         </ApplicationProvider>
     );

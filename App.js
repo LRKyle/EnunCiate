@@ -15,27 +15,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-/*constructor(props){
-   super(props);
-   this.state = {
-      curPage: "Home"
-   };
- }
-
- setPage = (nextPage) => {
-   this.setState({curPage: nextPage});
- }
-
-  render(){  
-    const {curPage} = this.state; 
-    switch (curPage) {
-      case "Home":
-        return <Search getPage={this.setPage} setPage={curPage}/>
-      case "Analyze":
-        console.log("Yo?")
-        return <Analyze getPage={this.setPage} setPage={curPage}/>
-    }
-
-
-  }*/
