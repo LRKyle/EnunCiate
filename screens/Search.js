@@ -9,20 +9,15 @@ const data = [
   { text: 'RUS' },
 ];
 
-export const Search = ({getPage}) => {
+export const Search = ({navigation}) => {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState('Select A Language');
 
-  
   const onSelect = (index) => {
     setSelectedIndex(index);
     setSelectedValue(data[index.row].text);
   };
-
-  const pageSetter = () => {
-    getPage("Analyze", {value});
-  }
 
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
@@ -42,7 +37,7 @@ export const Search = ({getPage}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={pageSetter}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success' appearance='outline'onPress={() => navigation.navigate("Analyze")}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );
