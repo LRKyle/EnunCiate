@@ -1,4 +1,4 @@
-import React, {useState, Component} from 'react'
+import React from 'react'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {NavigationContainer} from '@react-navigation/native'
 import {Search} from './screens/Search'
@@ -10,7 +10,7 @@ export default function App() {
     <NavigationContainer> 
       <Stack.Navigator initialRouteName='Search'>
         <Stack.Screen name="Search" component={Search}/>
-        <Stack.Screen name="Analyze" component={Analyze}/>
+        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
