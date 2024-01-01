@@ -12,7 +12,7 @@ const data = [
 export const Search = ({navigation}) => {
   const [value, setValue] = React.useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedValue, setSelectedValue] = useState('Select A Language');
+  const [selectedValue, setSelectedValue] = useState(data[0].text);
 
   const onSelect = (index) => {
     setSelectedIndex(index);
@@ -37,7 +37,7 @@ export const Search = ({navigation}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success' appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success'  disabled = {value ? false : true} appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );

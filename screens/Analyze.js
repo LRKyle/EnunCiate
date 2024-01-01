@@ -10,6 +10,8 @@ let recording = new Audio.Recording();
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [recording, setRecording] = React.useState();
+  const [rec, setRec] = React.useState();
+  const [recPlaying, setPlaying] = React.useState();
 
   async function startRecording() {
     try {
@@ -21,9 +23,9 @@ export const Analyze = ({route}) => {
       });
 
       console.log('Starting recording..');
-      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+      const {recording} = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
       setRecording(recording);
+      setRec(recording.getURI())
       console.log('Recording started');
     } catch (err) {
       console.error('Failed to start recording', err);
@@ -34,25 +36,41 @@ export const Analyze = ({route}) => {
     console.log('Stopping recording..');
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync(
-      {
-        allowsRecordingIOS: false,
-      }
-    );
+    await Audio.setAudioModeAsync({allowsRecordingIOS: false});
     const uri = recording.getURI();
+    //console.log(recording)
     console.log('Recording stopped and stored at', uri);
   }
+  const sound = new Audio.Sound()
+  async function playback() {
+    if (recPlaying) {
+      console.log('Stopping playback..');
+      setPlaying()
+      sound.stopAsync();
+    }
+    else {    
+      setPlaying(true)
+      await sound.loadAsync({uri: rec})
+      await sound.playAsync()
+      //setPlaying() - Since it doesn't go back to Start after the audio ends
+    }
+  }
 
-  
   return (
-      <ApplicationProvider {...eva} theme = {eva.dark}>
-          <Layout style= {styles.container}>
-            <Button
-              title={recording ? 'Stop Recording' : 'Start Recording'}
-              onPress={recording ? stopRecording : startRecording}
-            />
-          </Layout>
-      </ApplicationProvider>
+    <ApplicationProvider {...eva} theme = {eva.dark}>
+        <Layout style= {styles.container}>
+          <Button
+            title={recording ? 'Stop Recording' : 'Start Recording'}
+            onPress={recording ? stopRecording : startRecording}
+          />
+          <Text>{recording ? 'K7S' : 'L7S'}</Text>
+          <Button
+            title={recPlaying ? 'Stop Playback' : 'Start Playback'}
+            onPress={playback}
+          />
+          
+        </Layout>
+    </ApplicationProvider>
   );
 }
 
@@ -61,7 +79,7 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-    }
+    },
 });
 
 
