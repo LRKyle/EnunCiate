@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
@@ -9,6 +9,8 @@ let recording = new Audio.Recording();
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
+  const [sound, setSound] = useState(new Audio.Sound());
+
   const [recording, setRecording] = React.useState();
   const [rec, setRec] = React.useState();
   const [recPlaying, setPlaying] = React.useState();
@@ -41,18 +43,20 @@ export const Analyze = ({route}) => {
     //console.log(recording)
     console.log('Recording stopped and stored at', uri);
   }
-  const sound = new Audio.Sound()
-  async function playback() {
+
+  async function startPlayback() { 
+    setPlaying(true)
+    await sound.loadAsync({uri: rec})
+    await sound.playAsync()
+    //setPlaying() - Since it doesn't go back to Start after the audio ends
+  }
+  async function stopPlayback(){
     if (recPlaying) {
       console.log('Stopping playback..');
       setPlaying()
       sound.stopAsync();
-    }
-    else {    
+      await sound.unloadAsync({uri: rec})
       setPlaying(true)
-      await sound.loadAsync({uri: rec})
-      await sound.playAsync()
-      //setPlaying() - Since it doesn't go back to Start after the audio ends
     }
   }
 
@@ -69,7 +73,7 @@ export const Analyze = ({route}) => {
           style={{marginTop: 15}} 
           status='success' 
           appearance='outline' 
-          onPress={playback}
+          onPress={recPlaying ? stopPlayback : startPlayback}
           >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>
           
         </Layout>
