@@ -37,7 +37,7 @@ export const Search = ({navigation}) => {
           {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
         </Layout>
-        <Button style={{marginTop: 5}} status='success'  disabled = {value ? false : true} appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
+        <Button style={{marginTop: 5}} status='success' disabled = {value ? false : true} appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
       </Layout>
     </ApplicationProvider>    
   );

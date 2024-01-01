@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React from 'react'
 import * as eva from '@eva-design/eva'
-import {StyleSheet, Button} from 'react-native'
-import {ApplicationProvider, Layout, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
+import {StyleSheet} from 'react-native'
+import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
@@ -60,14 +60,17 @@ export const Analyze = ({route}) => {
     <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style= {styles.container}>
           <Button
-            title={recording ? 'Stop Recording' : 'Start Recording'}
-            onPress={recording ? stopRecording : startRecording}
-          />
-          <Text>{recording ? 'K7S' : 'L7S'}</Text>
-          <Button
-            title={recPlaying ? 'Stop Playback' : 'Start Playback'}
-            onPress={playback}
-          />
+          status='success' 
+          appearance='outline' 
+          onPress={recording ? stopRecording : startRecording}
+          >{recording ? 'Stop Recording' : 'Start Recording'}</Button>
+
+          <Button 
+          style={{marginTop: 15}} 
+          status='success' 
+          appearance='outline' 
+          onPress={playback}
+          >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>
           
         </Layout>
     </ApplicationProvider>
