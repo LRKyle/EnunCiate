@@ -5,6 +5,7 @@ import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} 
 import {Audio} from 'expo-av'
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
+
 let recording = new Audio.Recording();
 
 export const Analyze = ({route}) => {
@@ -15,6 +16,11 @@ export const Analyze = ({route}) => {
   const [rec, setRec] = React.useState();
   const [recPlaying, setPlaying] = React.useState();
 
+  sound.setOnPlaybackStatusUpdate((status) => {
+    if (status.isPlaying) {setPlaying(true)}
+    else {setPlaying()}
+  });
+    
   async function startRecording() {
     try {
       console.log('Requesting permissions..');
@@ -40,23 +46,19 @@ export const Analyze = ({route}) => {
     await recording.stopAndUnloadAsync();
     await Audio.setAudioModeAsync({allowsRecordingIOS: false});
     const uri = recording.getURI();
-    //console.log(recording)
     console.log('Recording stopped and stored at', uri);
   }
 
   async function startPlayback() { 
-    setPlaying(true)
+    console.log('Starting playback..');
     await sound.loadAsync({uri: rec})
     await sound.playAsync()
-    //setPlaying() - Since it doesn't go back to Start after the audio ends
   }
   async function stopPlayback(){
     if (recPlaying) {
       console.log('Stopping playback..');
-      setPlaying()
       sound.stopAsync();
       await sound.unloadAsync({uri: rec})
-      setPlaying(true)
     }
   }
 
