@@ -19,6 +19,8 @@ export const Analyze = ({route}) => {
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.isPlaying) {setPlaying(true)}
     else {setPlaying()}
+
+    if (status.didJustFinish){stopPlayback()}
   });
     
   async function startRecording() {
