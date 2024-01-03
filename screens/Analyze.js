@@ -1,11 +1,14 @@
 import React, {useState}from 'react'
 import * as eva from '@eva-design/eva'
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
+import {AZURE_KEY, REGION} from '@env'
 import {SpeechConfig, AudioConfig, SpeechRecognizer} from 'microsoft-cognitiveservices-speech-sdk'
 
-const speechConfig = SpeechConfig.fromSubscription(process.env.REACT_APP_AZURE_KEY, process.env.REACT_APP_REGION);
+const speechConfig = SpeechConfig.fromSubscription(AZURE_KEY, REGION);
 const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
@@ -67,7 +70,7 @@ export const Analyze = ({route}) => {
 
   return (
     <ApplicationProvider {...eva} theme = {eva.dark}>
-        <Layout style= {styles.container}>
+        <Layout style= {styles.container}>  
           <Button
           status='success' 
           appearance='outline' 
