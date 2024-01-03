@@ -1,7 +1,6 @@
 import React, {useState}from 'react'
 import * as eva from '@eva-design/eva'
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
