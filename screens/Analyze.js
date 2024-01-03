@@ -3,10 +3,11 @@ import * as eva from '@eva-design/eva'
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
-import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
+import {SpeechConfig, AudioConfig, SpeechRecognizer} from 'microsoft-cognitiveservices-speech-sdk'
 
-
-let recording = new Audio.Recording();
+const speechConfig = SpeechConfig.fromSubscription(process.env.REACT_APP_AZURE_KEY, process.env.REACT_APP_REGION);
+const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
@@ -77,6 +78,7 @@ export const Analyze = ({route}) => {
           style={{marginTop: 15}} 
           status='success' 
           appearance='outline' 
+          //disabled={rec ? false : true}
           onPress={recPlaying ? stopPlayback : startPlayback}
           >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>
           
