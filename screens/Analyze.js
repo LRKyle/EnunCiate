@@ -2,22 +2,16 @@ import React, {useState}from 'react'
 import * as eva from '@eva-design/eva'
 import 'react-native-get-random-values';
 import {StyleSheet} from 'react-native'
-import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
+import {ApplicationProvider, Layout, Button} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
-import {AndroidAudioEncoder,AndroidOutputFormat,IOSAudioQuality,IOSOutputFormat, Recording,} from 'expo-av/build/Audio'
 import {AZURE_KEY, REGION} from '@env'
-import {SpeechConfig, AudioConfig, SpeechRecognizer} from 'microsoft-cognitiveservices-speech-sdk'
-
-const speechConfig = SpeechConfig.fromSubscription(AZURE_KEY, REGION);
-const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
-const recognizer = new SpeechRecognizer(speechConfig, audioConfig);
+import {SpeechConfig, AudioConfig, SpeechRecognizer, PronunciationAssessmentConfig, PronunciationAssessmentGradingSystem} from 'microsoft-cognitiveservices-speech-sdk'
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [sound, setSound] = useState(new Audio.Sound());
 
   const [recording, setRecording] = React.useState();
-  const [rec, setRec] = React.useState();
   const [recPlaying, setPlaying] = React.useState();
     
   sound.setOnPlaybackStatusUpdate((status) => {
@@ -64,7 +58,6 @@ export const Analyze = ({route}) => {
 
       await recording.startAsync();
       setRecording(recording);
-      setRec(recording.getURI())
       console.log('Recording started');
     } 
     catch (err) {
@@ -79,19 +72,7 @@ export const Analyze = ({route}) => {
     await Audio.setAudioModeAsync({allowsRecordingIOS: false});
     const uri = recording.getURI();
     console.log('Recording stopped and stored at', uri);
-  }
-
-  async function startPlayback() { 
-    console.log('Starting playback..');
-    await sound.loadAsync({uri: rec})
-    await sound.playAsync()
-  }
-  async function stopPlayback(){
-    if (recPlaying) {
-      console.log('Stopping playback..');
-      sound.stopAsync();
-      await sound.unloadAsync({uri: rec})
-    }
+    sendToAzure(uri);
   }
 
   return (
@@ -101,15 +82,7 @@ export const Analyze = ({route}) => {
           status='success' 
           appearance='outline' 
           onPress={recording ? stopRecording : startRecording}
-          >{recording ? 'Stop Recording' : 'Start Recording'}</Button>   
-
-          <Button 
-          style={{marginTop: 15}} 
-          status='success' 
-          appearance='outline' 
-          //disabled={rec ? false : true}
-          onPress={recPlaying ? stopPlayback : startPlayback}
-          >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>       
+          >{recording ? 'Stop Recording' : 'Start Recording'}</Button>     
         </Layout>
     </ApplicationProvider>
   );
