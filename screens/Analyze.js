@@ -34,27 +34,35 @@ export const Analyze = ({route}) => {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
+        staysActiveInBackground: true,
+        shouldDuckAndroid: true,
+        playThroughEarpieceAndroid: false,
       });
 
       console.log('Starting recording..');
-      const {recording} = await Audio.Recording.createAsync({
-        isMeteringEnabled: true,
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync({
         android: {
-          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.android,
           extension: '.wav',
-          outputFormat: AndroidOutputFormat.DEFAULT,
-          audioEncoder: AndroidAudioEncoder.DEFAULT,
+          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_PCM_16BIT,
+          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_PCM_16BIT,
+          sampleRate: 16000,
+          numberOfChannels: 1,
         },
         ios: {
-          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.ios,
           extension: '.wav',
-          outputFormat: IOSOutputFormat.LINEARPCM,
-        },
-        web: {
-          mimeType: 'audio/wav',
-          bitsPerSecond: 128000,
+          outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_LINEARPCM,
+          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MAX,
+          sampleRate: 16000,
+          numberOfChannels: 1,
+          bitRate: 256000,
+          linearPCMBitDepth: 16,
+          linearPCMIsBigEndian: false,
+          linearPCMIsFloat: false,
         },
       });
+
+      await recording.startAsync();
       setRecording(recording);
       setRec(recording.getURI())
       console.log('Recording started');
