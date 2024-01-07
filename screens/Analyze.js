@@ -4,6 +4,7 @@ import 'react-native-get-random-values';
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text, Select, SelectItem, Divider} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
+import {AndroidAudioEncoder,AndroidOutputFormat,IOSAudioQuality,IOSOutputFormat, Recording,} from 'expo-av/build/Audio'
 import {AZURE_KEY, REGION} from '@env'
 import {SpeechConfig, AudioConfig, SpeechRecognizer} from 'microsoft-cognitiveservices-speech-sdk'
 
@@ -18,14 +19,14 @@ export const Analyze = ({route}) => {
   const [recording, setRecording] = React.useState();
   const [rec, setRec] = React.useState();
   const [recPlaying, setPlaying] = React.useState();
-
+    
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.isPlaying) {setPlaying(true)}
     else {setPlaying()}
 
     if (status.didJustFinish){stopPlayback()}
   });
-    
+
   async function startRecording() {
     try {
       console.log('Requesting permissions..');
@@ -36,11 +37,29 @@ export const Analyze = ({route}) => {
       });
 
       console.log('Starting recording..');
-      const {recording} = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+      const {recording} = await Audio.Recording.createAsync({
+        isMeteringEnabled: true,
+        android: {
+          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.android,
+          extension: '.wav',
+          outputFormat: AndroidOutputFormat.DEFAULT,
+          audioEncoder: AndroidAudioEncoder.DEFAULT,
+        },
+        ios: {
+          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.ios,
+          extension: '.wav',
+          outputFormat: IOSOutputFormat.LINEARPCM,
+        },
+        web: {
+          mimeType: 'audio/wav',
+          bitsPerSecond: 128000,
+        },
+      });
       setRecording(recording);
       setRec(recording.getURI())
       console.log('Recording started');
-    } catch (err) {
+    } 
+    catch (err) {
       console.error('Failed to start recording', err);
     }
   }
@@ -74,7 +93,7 @@ export const Analyze = ({route}) => {
           status='success' 
           appearance='outline' 
           onPress={recording ? stopRecording : startRecording}
-          >{recording ? 'Stop Recording' : 'Start Recording'}</Button>
+          >{recording ? 'Stop Recording' : 'Start Recording'}</Button>   
 
           <Button 
           style={{marginTop: 15}} 
@@ -82,8 +101,7 @@ export const Analyze = ({route}) => {
           appearance='outline' 
           //disabled={rec ? false : true}
           onPress={recPlaying ? stopPlayback : startPlayback}
-          >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>
-          
+          >{recPlaying ? 'Stop Playback' : 'Start Playback'}</Button>       
         </Layout>
     </ApplicationProvider>
   );
