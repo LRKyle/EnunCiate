@@ -2,6 +2,7 @@ const express = require('express');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const _ = require('lodash');
 var fs = require("fs");
+require('dotenv').config();
 
 const app = express();
 
