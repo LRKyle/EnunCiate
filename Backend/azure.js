@@ -4,6 +4,8 @@ const _ = require('lodash');
 var fs = require("fs");
 require('dotenv').config();
 
+
+var hi = "Hello"
 const app = express();
 
 const subscriptionKey = process.env.AZUREKEY;
@@ -42,12 +44,20 @@ function main() {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
         });
         reco.close();
-    }
 
+
+        app.get('/api', (req, res) => {
+            res.json({"Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});
+            //res.send(hi);
+        })
+    }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
 
 main()
+
+
+
 
 app.listen(3000, () => {
 console.log('Server is running on port 3000');

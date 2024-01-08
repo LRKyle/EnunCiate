@@ -1,21 +1,30 @@
-import React, {useState}from 'react'
+import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import 'react-native-get-random-values';
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
-import {AZURE_KEY, REGION} from '@env'
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
+  const {backData, setBackData} = useState([{ }])
   const [sound, setSound] = useState(new Audio.Sound());
 
   const [recording, setRecording] = React.useState();
-  const [recPlaying, setPlaying] = React.useState();
+  const [recPlaying, setPlaying] = React.useState(); // Remove
+
+  useEffect(() => {
+    fetch("../../Backend/azure.js").then(
+      response => response.json()
+    ).then(
+      data => setBackData(data)
+    )
+     
+  }, [])
     
   sound.setOnPlaybackStatusUpdate((status) => {
-    if (status.isPlaying) {setPlaying(true)}
-    else {setPlaying()}
+    if (status.isPlaying) {setPlaying(true)} //Remove
+    else {setPlaying()} //Remove
 
     if (status.didJustFinish){stopPlayback()}
   });
@@ -95,6 +104,3 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
 });
-
-
-//var pronunciationAssessmentConfig = SpeechSDK.PronunciationAssessmentConfig.fromJSON("{\"referenceText\":\"good morning\",\"gradingSystem\":\"HundredMark\",\"granularity\":\"Phoneme\",\"phonemeAlphabet\":\"IPA\"}");
