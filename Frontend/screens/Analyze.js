@@ -2,22 +2,22 @@ import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import 'react-native-get-random-values';
 import {StyleSheet} from 'react-native'
-import {ApplicationProvider, Layout, Button} from '@ui-kitten/components'
+import {ApplicationProvider, Layout, Button, Text} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
-  const {backData, setBackData} = useState([{ }])
+  const {backData, setBackData} = useState()
   const [sound, setSound] = useState(new Audio.Sound());
 
   const [recording, setRecording] = React.useState();
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
   useEffect(() => {
-    fetch("../../Backend/azure.js").then(
+    fetch("/api").then(
       response => response.json()
     ).then(
-      data => setBackData(data)
+      data => {setBackData(data)}
     )
      
   }, [])
@@ -85,8 +85,9 @@ export const Analyze = ({route}) => {
   }
 
   return (
-    <ApplicationProvider {...eva} theme = {eva.dark}>
-        <Layout style= {styles.container}>  
+    <ApplicationProvider {...eva} theme={eva.dark}>
+        <Layout style={styles.container}>  
+          <Text>{backData ? 'Loading...' : `Overall Accuracy Score: ${backData}`}</Text>
           <Button
           status='success' 
           appearance='outline' 
@@ -104,3 +105,4 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
 });
+//backData["Overall Accuracy Score"]

@@ -33,11 +33,11 @@ function main() {
     function onRecognizedResult(result) {
         console.log("pronunciation assessment for: ", result.text);
         var pronunciation_result = sdk.PronunciationAssessmentResult.fromResult(result);
-        console.log(" Accuracy score: ", pronunciation_result.accuracyScore, '\n',
-            "pronunciation score: ", pronunciation_result.pronunciationScore, '\n',
-            "completeness score : ", pronunciation_result.completenessScore, '\n',
-            "fluency score: ", pronunciation_result.fluencyScore, '\n',
-            "prosody score: ", pronunciation_result.prosodyScore
+        console.log(" Overall Accuracy score: ", pronunciation_result.accuracyScore, '\n',
+            "Pronunciation score: ", pronunciation_result.pronunciationScore, '\n',
+            "Completeness score : ", pronunciation_result.completenessScore, '\n',
+            "Fluency score: ", pronunciation_result.fluencyScore, '\n',
+            "Prosody score: ", pronunciation_result.prosodyScore
         );
         console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
@@ -47,7 +47,7 @@ function main() {
 
 
         app.get('/api', (req, res) => {
-            res.json({"Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});
+            res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});
             //res.send(hi);
         })
     }
