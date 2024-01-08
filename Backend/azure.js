@@ -6,87 +6,46 @@ require('dotenv').config();
 
 const app = express();
 
-function main () {
-    const subscriptionKey = process.env.AZUREKEY;
-    const serviceRegion = process.env.AZUREREGION;
-    const audioFile = "./assets/record_out.wav";
-    const topicFile = "./assets/laurenTopic.txt";
+const subscriptionKey = process.env.AZUREKEY;
+const serviceRegion = process.env.AZUREREGION;
+const audioFile = "./assets/record_out.wav";
 
-    var topic = fs.readFileSync(topicFile, "utf8");
+function main() {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
-    // setting the recognition language to English.
-    speechConfig.speechRecognitionLanguage = "en-US";
+    var reference_text = "I really really really like cakes";//Change searchVal here
 
-    // create the speech recognizer.
+    const pronunciationAssessmentConfig = new sdk.PronunciationAssessmentConfig(
+        reference_text,
+        sdk.PronunciationAssessmentGradingSystem.HundredMark,
+        sdk.PronunciationAssessmentGranularity.Phoneme,
+        true
+    );
+    pronunciationAssessmentConfig.enableProsodyAssessment = true;
+    speechConfig.speechRecognitionLanguage = "en-US";//Change langVal here
+
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
-    const connection = sdk.Connection.fromRecognizer(reco);
-    const phraseDetectionConfig = `{
-        "enrichment": {
-            "pronunciationAssessment": {
-                "referenceText": "",
-                "gradingSystem": "HundredMark",
-                "granularity": "Word",
-                "dimension": "Comprehensive",
-                "EnableMiscue": "False"
-            },
-            "contentAssessment": {
-                "topic": "${topic}"
-            }
-        }
-    }`;
-    connection.setMessageProperty("speech.context", "phraseDetection", JSON.parse(phraseDetectionConfig));
+    pronunciationAssessmentConfig.applyTo(reco);
 
-    const phraseOutputConfig = `{
-        "format": "Detailed",
-        "detailed": {
-            "options": [
-                "WordTimings",
-                "PronunciationAssessment",
-                "ContentAssessment",
-                "SNR"
-            ]
-        }
-    }`;
-    connection.setMessageProperty("speech.context", "phraseOutput", JSON.parse(phraseOutputConfig));
-    connection.close();
-
-    var results = [];
-    var recognizedText = "";
-
-    reco.recognized = function (s, e) {
-        jo = JSON.parse(e.result.properties.getProperty(sdk.PropertyId.SpeechServiceResponse_JsonResult));
-        if (jo.DisplayText != ".") {
-            console.log(`Recognizing: ${jo.DisplayText}`);
-            recognizedText += jo.DisplayText;
-        }
-        results.push(jo);
-    }
-
-    function onRecognizedResult() {
-        console.log(`Recognized text: ${recognizedText}`);
-        var contentAssessmentResult = results[results.length-1]["NBest"][0]["ContentAssessment"];
-        console.log("Content assessment result: ", contentAssessmentResult);
-    }
-
-    reco.canceled = function (s, e) {
-        if (e.reason === sdk.CancellationReason.Error) {
-            var str = "(cancel) Reason: " + sdk.CancellationReason[e.reason] + ": " + e.errorDetails;
-            console.log(str);
-        }
-        reco.stopContinuousRecognitionAsync();
-    };
-
-    reco.sessionStopped = function (s, e) {
-        reco.stopContinuousRecognitionAsync();
+    function onRecognizedResult(result) {
+        console.log("pronunciation assessment for: ", result.text);
+        var pronunciation_result = sdk.PronunciationAssessmentResult.fromResult(result);
+        console.log(" Accuracy score: ", pronunciation_result.accuracyScore, '\n',
+            "pronunciation score: ", pronunciation_result.pronunciationScore, '\n',
+            "completeness score : ", pronunciation_result.completenessScore, '\n',
+            "fluency score: ", pronunciation_result.fluencyScore, '\n',
+            "prosody score: ", pronunciation_result.prosodyScore
+        );
+        console.log("  Word-level details:");
+        _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
+            console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
+        });
         reco.close();
-        onRecognizedResult();
-    };
+    }
 
-    reco.startContinuousRecognitionAsync();
+    reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
-
 
 main()
 
