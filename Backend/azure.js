@@ -9,7 +9,7 @@ const app = express();
 function main () {
     const subscriptionKey = process.env.AZUREKEY;
     const serviceRegion = process.env.AZUREREGION;
-    const audioFile = "./assets/laurenAudio.wav";
+    const audioFile = "./assets/record_out.wav";
     const topicFile = "./assets/laurenTopic.txt";
 
     var topic = fs.readFileSync(topicFile, "utf8");
