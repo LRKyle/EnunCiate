@@ -14,10 +14,13 @@ export const Analyze = ({route}) => {
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
   useEffect(() => {
-    fetch("/api").then(
+    fetch("/api").then(//It stops working before it gets here: "TypeError: Network request failed"
       response => response.json()
     ).then(
-      data => {setBackData(data)}
+      data => {
+        setBackData(data)
+        console.log(data, "DATAAAAAAAAAAAAAAAAA")}
+        
     )
      
   }, [])
