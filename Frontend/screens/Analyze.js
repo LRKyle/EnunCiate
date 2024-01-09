@@ -5,6 +5,9 @@ import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text} from '@ui-kitten/components'
 import {Audio} from 'expo-av'
 
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
+
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const {backData, setBackData} = useState()
@@ -13,18 +16,22 @@ export const Analyze = ({route}) => {
   const [recording, setRecording] = React.useState();
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
-  useEffect(() => {
-    fetch("/api").then(//It stops working before it gets here: "TypeError: Network request failed"
-      response => response.json()
-    ).then(
+
+  eventEmitter.on('data', (data) => {
+    setBackData(data);
+  });
+/*useEffect(() => {
+    //It stops working before it gets here: "TypeError: Network request failed"
+    //Receives the error: "TypeError: Network request failed"
+    fetch("http://192.168.1.174:3000/api").then(response => response.json())
+    .then(
       data => {
         setBackData(data)
         console.log(data, "DATAAAAAAAAAAAAAAAAA")}
-        
     )
      
-  }, [])
-    
+  }, [])*/
+
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.isPlaying) {setPlaying(true)} //Remove
     else {setPlaying()} //Remove
