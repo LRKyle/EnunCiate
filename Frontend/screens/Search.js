@@ -4,6 +4,7 @@ import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider, Button, Icon, IconRegistry,} from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import axios from 'axios';
 
 const data = [
   { text: 'EN' },
@@ -18,16 +19,11 @@ export const Search = ({navigation}) => {
   const [recording, setRecording] = React.useState();
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState(data[0].text);
-
-  const micOutline = (props) => ( //Mic Off
-    <TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>
-  );
-
-  const micFill = (props) => ( //Mic On                               //
-    <TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>
-  );
   
-  
+  //micOff
+  const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
+  //micOn
+  const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
 
   const onSelect = (index) => {
     setSelectedIndex(index);
@@ -92,6 +88,25 @@ export const Search = ({navigation}) => {
     console.log('Recording stopped and stored at', uri);
   }
 
+
+  const nextStep = () => {
+
+    axios.post(process.env.REACT_APP_BACKEND, {
+      searchVal: value,
+      langVal: selectedValue,
+      uri: recording
+    })
+    .then((response) => {
+      setBackData(response.data);
+      console.log(response.data);
+    })
+    .catch((error)=> {
+      console.error(error, "sda sdasd a")
+    })
+
+    //navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue});
+  };
+
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
@@ -113,7 +128,7 @@ export const Search = ({navigation}) => {
             value={selectedValue}>
             {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={() => navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue})}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={nextStep}>Analyze your pronunciation!</Button>
         </Layout>
       </ApplicationProvider>    
     </>

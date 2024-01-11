@@ -1,16 +1,27 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const _ = require('lodash');
 var fs = require("fs");
 require('dotenv').config();
 
 const app = express();
+app.use(bodyParser.json());
 
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 const audioFile = "./assets/record_out.wav";
 
 function main() {
+    app.post('/backend', (req, res) => {
+        const searchVal = req.body.searchVal;
+        const langVal = req.body.langVal;
+        const uri = req.body.uri;
+        console.log(req.body.searchVal);
+      });
+    
+    
+
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
