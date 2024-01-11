@@ -15,12 +15,16 @@ export const Analyze = ({route}) => {
   const [backData, setBackData] = React.useState([{}]);
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
-  useEffect(() => {//https://localhost:3000/api 
-    axios.get('https://jsonplaceholder.typicode.com/users')
+  useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL);//Find a way to get the API from the env
+    axios.get(process.env.REACT_APP_API_URL) //Use IP instead of localhost
     .then((response) => {
       setBackData(response.data);
+      console.log(response.data);
     })
-    .catch((error)=> console.error(error, "sda sdasd a"))
+    .catch((error)=> {
+      console.error(error, "sda sdasd a")
+    })
   },[]);
 
   sound.setOnPlaybackStatusUpdate((status) => {
@@ -88,10 +92,9 @@ export const Analyze = ({route}) => {
   return (
     <ApplicationProvider {...eva} theme={eva.dark}>
         <Layout style={styles.container}>  
-          <Text></Text>
-          
           <Text>{typeof(backData)}</Text>
-          <Text>{backData[0].name}</Text>
+          <Text>{backData['Completeness Score']}</Text>
+          
           <Button
           status='success' 
           appearance='outline' 
