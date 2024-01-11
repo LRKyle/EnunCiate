@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {  
   return(
     <NavigationContainer> 
-      <Stack.Navigator initialRouteName='Analyze'>
+      <Stack.Navigator initialRouteName='Search'>
         <Stack.Screen name="Search" component={Search}/>
         <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}}/>
       </Stack.Navigator>
