@@ -98,7 +98,7 @@ export const Search = ({navigation}) => {
       <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style={styles.container}>
           <Layout> 
-            <Text style={styles.color = '#f7faff'}category='h1'>Language Assessment</Text>
+            <Text style={styles.color = '#f7faff'} category='h1'>Language Assessment</Text>
             <Text style={{textAlign: 'center'}}>Enter a word and then click the mic then {"\n"} pronunce that word! {"\n"}</Text>
             <Divider style = {styles.test}/>
           </Layout>
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontStyle: 'italic',
     color: 'black',
-    width: '65%',
+    width: '75%',
     //textAlign: 'center',
     borderColor: 'black',
     borderWidth: 1,  // Obv
@@ -145,10 +145,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10, //Padding = The space away from the input
     paddingLeft: 10,
-  },
-  icon: {
-    width: 32,
-    height: 32,
   },
 });
 
