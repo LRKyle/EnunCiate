@@ -8,21 +8,24 @@ import {Audio} from 'expo-av'
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
-  const {backData, setBackData} = useState()
+  
   const [sound, setSound] = useState(new Audio.Sound());
 
   const [recording, setRecording] = React.useState();
+  const [backData, setBackData] = React.useState([{}]);
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
-  useEffect(() => {//https://localhost:3000/api
-    axios.get("https://jsonplaceholder.typicode.com/users")
-    .then((response) => console.log(response.data))
+  useEffect(() => {//https://localhost:3000/api 
+    axios.get('https://jsonplaceholder.typicode.com/users')
+    .then((response) => {
+      setBackData(response.data);
+    })
     .catch((error)=> console.error(error, "sda sdasd a"))
   },[]);
 
   sound.setOnPlaybackStatusUpdate((status) => {
-    if (status.isPlaying) {setPlaying(true)} //Remove
-    else {setPlaying()} //Remove
+    if (status.isPlaying) {setPlaying(true)} // Remove
+    else {setPlaying()} // Remove
 
     if (status.didJustFinish){stopPlayback()}
   });
@@ -85,7 +88,10 @@ export const Analyze = ({route}) => {
   return (
     <ApplicationProvider {...eva} theme={eva.dark}>
         <Layout style={styles.container}>  
-          <Text>{backData ? 'Loading...' : `Overall Accuracy Score: ${backData}`}</Text>
+          <Text></Text>
+          
+          <Text>{typeof(backData)}</Text>
+          <Text>{backData[0].name}</Text>
           <Button
           status='success' 
           appearance='outline' 
