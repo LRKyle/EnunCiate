@@ -3,10 +3,8 @@ import * as eva from '@eva-design/eva'
 import 'react-native-get-random-values';
 import {StyleSheet} from 'react-native'
 import {ApplicationProvider, Layout, Button, Text} from '@ui-kitten/components'
+import axios from 'axios';
 import {Audio} from 'expo-av'
-
-const EventEmitter = require('events');
-const eventEmitter = new EventEmitter();
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
@@ -16,21 +14,11 @@ export const Analyze = ({route}) => {
   const [recording, setRecording] = React.useState();
   const [recPlaying, setPlaying] = React.useState(); // Remove
 
-
-  eventEmitter.on('data', (data) => {
-    setBackData(data);
-  });
-/*useEffect(() => {
-    //It stops working before it gets here: "TypeError: Network request failed"
-    //Receives the error: "TypeError: Network request failed"
-    fetch("http://192.168.1.174:3000/api").then(response => response.json())
-    .then(
-      data => {
-        setBackData(data)
-        console.log(data, "DATAAAAAAAAAAAAAAAAA")}
-    )
-     
-  }, [])*/
+  useEffect(() => {//https://localhost:3000/api
+    axios.get("https://jsonplaceholder.typicode.com/users")
+    .then((response) => console.log(response.data))
+    .catch((error)=> console.error(error, "sda sdasd a"))
+  },[]);
 
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.isPlaying) {setPlaying(true)} //Remove

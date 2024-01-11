@@ -2,13 +2,8 @@ const express = require('express');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const _ = require('lodash');
 var fs = require("fs");
-
-const EventEmitter = require('events');
-const eventEmitter = new EventEmitter();
 require('dotenv').config();
 
-
-var hi = "Hello"
 const app = express();
 
 const subscriptionKey = process.env.AZUREKEY;
@@ -49,11 +44,12 @@ function main() {
         reco.close();
 
 
-        /*app.get('/api', (req, res) => {
+        app.get('/api', (req, res) => {
             res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});
             //res.send(hi);
-        })*/
-        eventEmitter.emit('data', pronunciation_result.accuracyScore);
+        })
+
+
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
