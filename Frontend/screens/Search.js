@@ -13,17 +13,18 @@ const data = [
 ];
 
 export const Search = ({navigation}) => {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
   const [sound, setSound] = useState(new Audio.Sound());
   const [done, setDone] = useState(false);
-  const [recording, setRecording] = React.useState();
+  const [recording, setRecording] = useState();
+  const [uri, setURI] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState(data[0].text);
   
   //micOff
   const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
   //micOn
-  const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
+  const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
 
   const onSelect = (index) => {
     setSelectedIndex(index);
@@ -80,12 +81,12 @@ export const Search = ({navigation}) => {
 
   async function stopRecording() {
     console.log('Stopping recording..');
-    setRecording();
-    setDone(true);
     await recording.stopAndUnloadAsync();
     await Audio.setAudioModeAsync({allowsRecordingIOS: false});
-    const uri = recording.getURI();
-    console.log('Recording stopped and stored at', uri);
+    setURI(recording.getURI());
+    setRecording();
+    setDone(true);
+    console.log('Recording stopped and stored at', typeof(uri), uri, "!");//Doesn't show up here but it works
   }
 
 
@@ -94,7 +95,7 @@ export const Search = ({navigation}) => {
     axios.post(process.env.REACT_APP_BACKEND, {
       searchVal: value,
       langVal: selectedValue,
-      uri: recording
+      uri: uri
     })
     .then((response) => {
       setBackData(response.data);
@@ -112,9 +113,10 @@ export const Search = ({navigation}) => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style={styles.container}>
-          <Layout> 
+          <Layout>
             <Text style={styles.color = '#f7faff'} category='h1'>Language Assessment</Text>
-            <Text style={{textAlign: 'center'}}>Enter a word and then click the mic then {"\n"} pronunce that word! {"\n"}</Text>
+            <Text style={{textAlign: 'center'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
+            <Text  style={{textAlign: 'center', marginBottom: '5%'}}>Remember to select a language!</Text>
             <Divider style = {styles.test}/>
           </Layout>
           <Layout style={styles.row}>

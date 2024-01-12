@@ -10,22 +10,12 @@ app.use(bodyParser.json());
 
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
-const audioFile = "./assets/record_out.wav";
 
-function main() {
-    app.post('/backend', (req, res) => {
-        const searchVal = req.body.searchVal;
-        const langVal = req.body.langVal;
-        const uri = req.body.uri;
-        console.log(req.body.searchVal);
-      });
-    
-    
-
+function main(refText, lang, audioFile) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
-    var reference_text = "I really really really like cakes";//Change searchVal here
+    var reference_text = refText
 
     const pronunciationAssessmentConfig = new sdk.PronunciationAssessmentConfig(
         reference_text,
@@ -34,7 +24,7 @@ function main() {
         true
     );
     pronunciationAssessmentConfig.enableProsodyAssessment = true;
-    speechConfig.speechRecognitionLanguage = "en-US";//Change langVal here
+    speechConfig.speechRecognitionLanguage = 'en-US'//lang;
 
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
     pronunciationAssessmentConfig.applyTo(reco);
@@ -65,8 +55,15 @@ function main() {
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
 
-main()
+app.post('/backend', (req, res) => {
+    const searchVal = req.body.searchVal;
+    const langVal = req.body.langVal;
+    const uri = req.body.uri;
+    console.log(req.body.searchVal, "if ourrrrrrr love is tragedy why are you my remedy", req.body.langVal, req.body.uri);
 
+
+   // main(req.body.searchVal, req.body.langVal, req.body.uri);
+});
 
 app.listen(3000, () => {
 console.log('Server is running on port 3000');
