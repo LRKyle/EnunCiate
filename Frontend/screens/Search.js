@@ -6,6 +6,8 @@ import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider, B
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import axios from 'axios';
 
+import * as FileSystem from 'expo-file-system'
+
 const data = [
   { text: 'EN' },
   { text: 'FR' },
@@ -21,9 +23,8 @@ export const Search = ({navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedValue, setSelectedValue] = useState(data[0].text);
   
-  //micOff
+  //micOff / micOn  
   const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
-  //micOn
   const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
 
   const onSelect = (index) => {
@@ -89,24 +90,24 @@ export const Search = ({navigation}) => {
     console.log('Recording stopped and stored at', typeof(uri), uri, "!");//Doesn't show up here but it works
   }
 
+  const AH = async () => {// replace with the file you want to download
+    try {
+      const response = await FileSystem.uploadAsync(process.env.REACT_APP_AUDIO, uri, {
+        fieldName: 'file',
+        httpMethod: 'PATCH',
+        uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
+      });
 
-  const nextStep = () => {
+      //console.log(JSON.stringify(response, null, 4));
+      
+      axios.post(process.env.REACT_APP_BACKEND, {searchVal: value, langVal: selectedValue})
+      .then((response) => {console.log(response.data);})
+      .catch((error)=> {console.error(error, " Post Error :(")})  
 
-    axios.post(process.env.REACT_APP_BACKEND, {
-      searchVal: value,
-      langVal: selectedValue,
-      uri: uri
-    })
-    .then((response) => {
-      setBackData(response.data);
-      console.log(response.data);
-    })
-    .catch((error)=> {
-      console.error(error, "sda sdasd a")
-    })
-
-    //navigation.navigate("Analyze", {searchVal: value, langVal: selectedValue});
-  };
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -130,7 +131,7 @@ export const Search = ({navigation}) => {
             value={selectedValue}>
             {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={nextStep}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={AH}>Analyze your pronunciation!</Button>
         </Layout>
       </ApplicationProvider>    
     </>
