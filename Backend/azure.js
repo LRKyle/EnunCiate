@@ -3,16 +3,18 @@ const bodyParser = require('body-parser');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const _ = require('lodash');
 var fs = require("fs");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 require('dotenv').config();
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json({limit: '50mb'}));
 
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 
-function main(refText, lang, audioFile) {
-    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
+function main(refText, lang) {
+    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync("./assets/audioFile.wav"));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
     var reference_text = refText
@@ -55,14 +57,16 @@ function main(refText, lang, audioFile) {
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
 
+
+app.patch('/upload', (req, res) => {req.pipe(fs.createWriteStream('./assets/audioFile.wav')); res.end('OK');});
+
 app.post('/backend', (req, res) => {
     const searchVal = req.body.searchVal;
     const langVal = req.body.langVal;
-    const uri = req.body.uri;
-    console.log(req.body.searchVal, "if ourrrrrrr love is tragedy why are you my remedy", req.body.langVal, req.body.uri);
+    console.log("I miss the old Kanye");
 
-
-   // main(req.body.searchVal, req.body.langVal, req.body.uri);
+   res.sendStatus(200);
+   main(searchVal, langVal);
 });
 
 app.listen(3000, () => {
