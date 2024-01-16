@@ -13,8 +13,8 @@ app.use(express.json({limit: '50mb'}));
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 
-function main(refText, lang) {
-    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync("./assets/audioFile.wav"));
+function main(refText, lang, audioFile) {
+    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
     var reference_text = refText
@@ -58,16 +58,27 @@ function main(refText, lang) {
 }
 
 
-app.patch('/upload', (req, res) => {req.pipe(fs.createWriteStream('./assets/audioFile.wav')); res.end('OK');});
+app.patch('/upload', upload.single('audio'), (req, res) => {
+    let readStream = fs.createReadStream(req.file.path);
+    let writeStream = fs.createWriteStream('./assets/audiofile.wav');
+    readStream.pipe(writeStream);
 
-app.post('/backend', (req, res) => {
+    writeStream.on('finish', () => {
+        console.log('File has been written');
+        main(req.body.searchVal, req.body.langVal, './assets/audiofile.wav');
+        res.end('OK');
+    });
+});
+
+/*app.post('/backend', (req, res) => {
     const searchVal = req.body.searchVal;
     const langVal = req.body.langVal;
+    console.log(req.body)
     console.log("I miss the old Kanye");
-
    res.sendStatus(200);
-   main(searchVal, langVal);
-});
+});*/
+
+//main("I really really really like", "en-US", "./assets/record_out.wav");
 
 app.listen(3000, () => {
 console.log('Server is running on port 3000');

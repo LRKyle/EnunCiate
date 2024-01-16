@@ -55,8 +55,9 @@ export const Search = ({navigation}) => {
           extension: '.wav',
           outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_PCM_16BIT,
           audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_PCM_16BIT,
-          sampleRate: 16000,
+          sampleRate: 48000,
           numberOfChannels: 1,
+          bitRate: 768000,
         },
 
         ios: {
@@ -87,11 +88,41 @@ export const Search = ({navigation}) => {
     setURI(recording.getURI());
     setRecording();
     setDone(true);
-    console.log('Recording stopped and stored at', typeof(uri), uri, "!");//Doesn't show up here but it works
+    console.log('Recording stopped and stored at', typeof(uri), uri, "!");//URI doesn't load here for some reason but it doesn't matter
   }
 
-  const AH = async () => {// replace with the file you want to download
+  async function uploadFile(uri, otherParams) {
+    let formData = new FormData();
+    formData.append('audio', {
+      uri,
+      name: 'file.wav',
+      type: 'audio/wav'
+    });
+  
+    // Add other parameters
+    for (let key in otherParams) {
+      formData.append(key, otherParams[key]);
+    }
+  
+    let options = {
+      method: 'PATCH',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+  
+    let response = await fetch(process.env.REACT_APP_AUDIO, options);
+    let responseText = await response.text();
+  
+    console.log(responseText);
+  }
+
+  const AH = async () => {console.log(uri); uploadFile(uri, {searchVal: value, langVal: selectedValue})}
+
+  /*const dataUploading = async () => {
     try {
+      console.log(uri)
       const response = await FileSystem.uploadAsync(process.env.REACT_APP_AUDIO, uri, {
         fieldName: 'file',
         httpMethod: 'PATCH',
@@ -107,7 +138,7 @@ export const Search = ({navigation}) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  }*/
 
   return (
     <>
