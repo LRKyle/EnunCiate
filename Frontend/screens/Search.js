@@ -3,8 +3,12 @@ import * as eva from '@eva-design/eva'
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider, Button, Icon, IconRegistry,} from '@ui-kitten/components'
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import axios from 'axios';
+import ky from 'ky'
+import * as Sharing from 'expo-sharing'
+
+
 
 import * as FileSystem from 'expo-file-system'
 
@@ -50,28 +54,6 @@ export const Search = ({navigation}) => {
 
       console.log('Starting recording..');
       const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync({
-        android: {
-          extension: '.wav',
-          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_PCM_16BIT,
-          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_PCM_16BIT,
-          sampleRate: 48000,
-          numberOfChannels: 1,
-          bitRate: 768000,
-        },
-
-        ios: {
-          extension: '.wav',
-          outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_LINEARPCM,
-          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MAX,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-          bitRate: 256000,
-          linearPCMBitDepth: 16,
-          linearPCMIsBigEndian: false,
-          linearPCMIsFloat: false,
-        },
-      });
 
       await recording.startAsync();
       setRecording(recording);
@@ -88,57 +70,23 @@ export const Search = ({navigation}) => {
     setURI(recording.getURI());
     setRecording();
     setDone(true);
-    console.log('Recording stopped and stored at', typeof(uri), uri, "!");//URI doesn't load here for some reason but it doesn't matter
+    console.log('Recording stopped and stored');
   }
 
-  async function uploadFile(uri, otherParams) {
-    let formData = new FormData();
-    formData.append('audio', {
-      uri,
-      name: 'file.wav',
-      type: 'audio/wav'
+  const test = async () => {
+    const filetype = uri.split(".").pop();
+    const filename = "audioFile"
+    const fd = new FormData();
+    fd.append("audio-record", {
+      uri: uri,
+      type: `audio/${filetype}`,
+      name: filename,
+
     });
-  
-    // Add other parameters
-    for (let key in otherParams) {
-      formData.append(key, otherParams[key]);
-    }
-  
-    let options = {
-      method: 'PATCH',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    };
-  
-    let response = await fetch(process.env.REACT_APP_AUDIO, options);
-    let responseText = await response.text();
-  
-    console.log(responseText);
+    await ky.post(process.env.REACT_APP_AUDIO, {
+      body: fd,
+    });
   }
-
-  const AH = async () => {console.log(uri); uploadFile(uri, {searchVal: value, langVal: selectedValue})}
-
-  /*const dataUploading = async () => {
-    try {
-      console.log(uri)
-      const response = await FileSystem.uploadAsync(process.env.REACT_APP_AUDIO, uri, {
-        fieldName: 'file',
-        httpMethod: 'PATCH',
-        uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
-      });
-
-      //console.log(JSON.stringify(response, null, 4));
-      
-      axios.post(process.env.REACT_APP_BACKEND, {searchVal: value, langVal: selectedValue})
-      .then((response) => {console.log(response.data);})
-      .catch((error)=> {console.error(error, " Post Error :(")})  
-
-    } catch (error) {
-      console.log(error);
-    }
-  }*/
 
   return (
     <>
@@ -162,7 +110,7 @@ export const Search = ({navigation}) => {
             value={selectedValue}>
             {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={AH}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={test}>Analyze your pronunciation!</Button>
         </Layout>
       </ApplicationProvider>    
     </>
@@ -196,11 +144,3 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 });
-
-/*<Button
-  style = {{height: '30%'}}
-  status='success' 
-  appearance='ghost' 
-  onPress={recording ? stopRecording : startRecording}
-  accessoryLeft={recording ? micFill : micOutline}
-  /> */

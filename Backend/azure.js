@@ -5,6 +5,8 @@ const _ = require('lodash');
 var fs = require("fs");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath('./ffmpeg-6.1.1-essentials_build/bin/ffmpeg.exe');
 require('dotenv').config();
 
 const app = express();
@@ -30,6 +32,7 @@ function main(refText, lang, audioFile) {
 
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
     pronunciationAssessmentConfig.applyTo(reco);
+    console.log("Yep2")
 
     function onRecognizedResult(result) {
         console.log("pronunciation assessment for: ", result.text);
@@ -52,22 +55,34 @@ function main(refText, lang, audioFile) {
             //res.send(hi);
         })
 
-
+        console.log("Yep3")
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
 
-
-app.patch('/upload', upload.single('audio'), (req, res) => {
-    let readStream = fs.createReadStream(req.file.path);
-    let writeStream = fs.createWriteStream('./assets/audiofile.wav');
-    readStream.pipe(writeStream);
-
-    writeStream.on('finish', () => {
-        console.log('File has been written');
-        main(req.body.searchVal, req.body.langVal, './assets/audiofile.wav');
-        res.end('OK');
+function convertToWav(inputPath, outputPath) {
+    return new Promise((resolve, reject) => {
+      ffmpeg(inputPath)
+        .output(outputPath)
+        .format('wav')
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
     });
+  }  
+
+app.post('/upload', upload.single('audio-record'), async (req, res) => {
+
+    const inputPath = req.file.path;
+    const outputPath = req.file.path + '.wav';
+
+    try {
+    await convertToWav(inputPath, outputPath);
+    console.log(outputPath)
+    main("Cheese", "en-US", outputPath);
+    } catch (error) {
+    console.error('Failed to convert file to WAV format', error);
+    }
 });
 
 /*app.post('/backend', (req, res) => {
