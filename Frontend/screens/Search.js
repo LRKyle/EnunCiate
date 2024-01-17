@@ -47,20 +47,16 @@ export const Search = ({navigation}) => {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
-        staysActiveInBackground: true,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
       });
 
       console.log('Starting recording..');
-      const recording = new Audio.Recording();
-
-      await recording.startAsync();
+      const {recording} = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
       setRecording(recording);
       setDone(false);
       console.log('Recording started');
-    } 
-    catch (err) {console.error('Failed to start recording', err);}
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
   }
 
   async function stopRecording() {
