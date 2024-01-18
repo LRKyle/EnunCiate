@@ -28,7 +28,7 @@ function main(refText, lang, audioFile) {
         true
     );
     pronunciationAssessmentConfig.enableProsodyAssessment = true;
-    speechConfig.speechRecognitionLanguage = 'en-US'//lang;
+    speechConfig.speechRecognitionLanguage = lang//lang;
 
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
     pronunciationAssessmentConfig.applyTo(reco);
@@ -71,11 +71,11 @@ function convertToWav(inputPath, outputPath) {
 app.post('/upload', upload.single('audio-record'), async (req, res) => {
     const inputPath = req.file.path;
     const outputPath = req.file.path + '.wav'
-
+    
     try {
     await convertToWav(inputPath, outputPath);
     console.log(outputPath)
-    main(req.body.searchVal, "en-US", outputPath);
+    main(req.body.searchVal, req.body.lang, outputPath);
     } catch (error) {
     console.error('Failed to convert file to WAV format', error);
     }

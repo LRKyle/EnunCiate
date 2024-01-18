@@ -63,15 +63,14 @@ export const Search = ({navigation}) => {
       type: `audio/${filetype}`,
     });
     fd.append("searchVal", value);
-    fd.append("lang", selectedValue);
+    fd.append("lang", lang);
 
     await ky.post(process.env.REACT_APP_AUDIO, {
       body: fd
     });
   }
 
-
-  const data = [
+  const langSetting = [
     {
       language: 'English',
       dialects: ['American Dialect', 'Canadian Dialect', 'British Dialect', 'Australia Dialect', 'Indian Dialect'],
@@ -98,14 +97,12 @@ export const Search = ({navigation}) => {
           <Select
             style={{width: '45%'}}
             onSelect={(item) => { 
-              console.log(item)
-              console.log(data[item.section].language, ": ", data[item.section].dialects[item.row]);
-              setSelectedValue(data[item.section].dialects[item.row]);
-              setLang(data[item.section].regionCode[item.row]);
+              setSelectedValue(langSetting[item.section].dialects[item.row]);
+              setLang(langSetting[item.section].regionCode[item.row]);
             }}
             placeholder={selectedValue ? selectedValue : 'Select a language'}
           >
-            {data.map((group, index) => (
+            {langSetting.map((group, index) => (
               <SelectGroup key={index} title={group.language}>
                 {group.dialects.map((dialect, index) => (<SelectItem key={index} title={dialect}/>))}
               </SelectGroup>
