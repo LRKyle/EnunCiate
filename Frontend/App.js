@@ -9,7 +9,7 @@ export default function App() {
   return(
     <NavigationContainer> 
       <Stack.Navigator initialRouteName='Search'>
-        <Stack.Screen name="Search" component={Search} options={{title: "Swipe left to see history", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, animation: 'slide_from_right'}}/>
+        <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, animation: 'slide_from_right'}}/>
         <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}}/>
       </Stack.Navigator>
     </NavigationContainer>
