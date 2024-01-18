@@ -6,3 +6,11 @@ This app uses Microsoft Azure's Pronunciation Assessment to analyze your pronunc
 
 ## Dialects and Regions
 This apps offers over 10+ dialects and it can seamlessly move inbetween languages aswell as saving a person's individual pronunciations seperate from other languages
+
+### To-do
+- Display data on the Results page
+- Get the backend to run automatically upon opening the app
+- Add a loading page inbetween the Input and Results page
+- Add a way to see the previous pronunciation of a specific word and all the pronunciations within the langauge
+- Make it so you can swipe down from the top header to return to the Input page and swipe left(from the Input page) to see the history of each language and finally, swipe down while in the Results page to see everytime that specific word has been pronounced and their results of them. 
+
