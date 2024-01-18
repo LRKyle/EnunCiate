@@ -71,15 +71,15 @@ function convertToWav(inputPath, outputPath) {
 app.post('/upload', upload.single('audio-record'), async (req, res) => {
     const inputPath = req.file.path;
     const outputPath = req.file.path + '.wav'
-    
+
     try {
-    await convertToWav(inputPath, outputPath);
-    console.log(outputPath)
-    main(req.body.searchVal, req.body.lang, outputPath);
-    } catch (error) {
-    console.error('Failed to convert file to WAV format', error);
-    }
-    res.sendStatus(200);
+        await convertToWav(inputPath, outputPath);
+        console.log(outputPath)
+        main(req.body.searchVal, req.body.lang, outputPath);
+        res.sendStatus(200);
+    } 
+    catch (error) {console.error('Failed to convert file to WAV format', error); res.sendStatus(409);}
+    
 });
 
 app.listen(3000, () => {

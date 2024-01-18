@@ -68,6 +68,10 @@ export const Search = ({navigation}) => {
     await ky.post(process.env.REACT_APP_AUDIO, {
       body: fd
     });
+
+    navigation.navigate('Analyze', {searchVal: value, lang: lang});
+    console.log("Life or death")
+    //Add a loading screen - https://www.youtube.com/watch?v=mZXCOdIFg6Q&pp=ygUrU2V0dXAgYSBsb2FkaW5nIHBhZ2UgUmVhY3QgTmF0aXZlIFVJIEtpdHRlbg%3D%3D
   }
 
   const langSetting = [
@@ -108,7 +112,7 @@ export const Search = ({navigation}) => {
               </SelectGroup>
             ))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={test}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' disabled = {value && done && selectedValue ? false : true} appearance='outline' onPress={test}>Analyze your pronunciation!</Button>
         </Layout>
       </ApplicationProvider>    
     </>
