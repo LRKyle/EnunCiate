@@ -2,21 +2,11 @@ import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
-import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider, Button, Icon, IconRegistry,} from '@ui-kitten/components'
+import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry,} from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
-import axios from 'axios';
 import ky from 'ky'
-import * as Sharing from 'expo-sharing'
 
 
-
-import * as FileSystem from 'expo-file-system'
-
-const data = [
-  { text: 'EN' },
-  { text: 'FR' },
-  { text: 'RUS' },
-];
 
 export const Search = ({navigation}) => {
   const [value, setValue] = useState('');
@@ -24,22 +14,17 @@ export const Search = ({navigation}) => {
   const [done, setDone] = useState(false);
   const [recording, setRecording] = useState();
   const [uri, setURI] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedValue, setSelectedValue] = useState(data[0].text);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [lang, setLang] = useState('');
   
   //micOff / micOn  
   const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
   const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
-
-  const onSelect = (index) => {
-    setSelectedIndex(index);
-    setSelectedValue(data[index.row].text);
-  };
   
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.didJustFinish){stopPlayback()}
   });
-
+  
   async function startRecording() {
     try {
       console.log('Requesting permissions..');
@@ -71,18 +56,31 @@ export const Search = ({navigation}) => {
 
   const test = async () => {
     const filetype = uri.split(".").pop();
-    const filename = "audioFile"
     const fd = new FormData();
     fd.append("audio-record", {
+      name: "audioFilessssssss",
       uri: uri,
       type: `audio/${filetype}`,
-      name: filename,
-
     });
+    fd.append("searchVal", value);
+    fd.append("lang", selectedValue);
+
     await ky.post(process.env.REACT_APP_AUDIO, {
-      body: fd,
+      body: fd
     });
   }
+
+
+  const data = [
+    {
+      language: 'English',
+      dialects: ['American Dialect', 'Canadian Dialect', 'British Dialect', 'Australia Dialect', 'Indian Dialect'],
+      regionCode: ['en-US', 'en-CA', 'en-GB', 'en-AU', 'en-IN'] 
+    },
+    {language: 'French', dialects: ['French Dialect', 'Canadian Dialect'], regionCode: ['fr-FR', 'fr-CA']},
+    {language: 'Spanish', dialects: ['Spaniard Dialect', 'Mexico Dialect'], regionCode: ['es-ES', 'es-MX']},
+    {language: 'Chinese', dialects: ['Mandarin Dialect (Simplified)', 'Cantonese Dialect (Traditional)'], regionCode: ['zh-CN', 'zh-HK']},
+  ];
 
   return (
     <>
@@ -90,21 +88,28 @@ export const Search = ({navigation}) => {
       <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style={styles.container}>
           <Layout>
-            <Text style={styles.color = '#f7faff'} category='h1'>Language Assessment</Text>
-            <Text style={{textAlign: 'center'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
-            <Text  style={{textAlign: 'center', marginBottom: '5%'}}>Remember to select a language!</Text>
+            <Text style={styles.color = '#f7faff'} category='h2'>Language Assessment</Text>
+            <Text style={{textAlign: 'center', marginBottom: '5%'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
             <Divider style = {styles.test}/>
           </Layout>
           <Layout style={styles.row}>
             <Input style ={styles.input} placeholder = 'Pronunced Word' value={value} accessoryRight={recording ? micFill : micOutline} onChangeText={nextValue => setValue(nextValue)}/> 
-            
           </Layout>
           <Select
-            style = {{width: '30%'}}
-            selectedIndex={selectedIndex}
-            onSelect={onSelect}
-            value={selectedValue}>
-            {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
+            style={{width: '45%'}}
+            onSelect={(item) => { 
+              console.log(item)
+              console.log(data[item.section].language, ": ", data[item.section].dialects[item.row]);
+              setSelectedValue(data[item.section].dialects[item.row]);
+              setLang(data[item.section].regionCode[item.row]);
+            }}
+            placeholder={selectedValue ? selectedValue : 'Select a language'}
+          >
+            {data.map((group, index) => (
+              <SelectGroup key={index} title={group.language}>
+                {group.dialects.map((dialect, index) => (<SelectItem key={index} title={dialect}/>))}
+              </SelectGroup>
+            ))}
           </Select>
           <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={test}>Analyze your pronunciation!</Button>
         </Layout>

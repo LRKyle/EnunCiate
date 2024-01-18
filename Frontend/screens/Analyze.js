@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
-  const [backData, setBackData] = React.useState([{}]);
+  const [backData, setBackData] = useState([{}]);
 
   useEffect(() => {
     console.log(process.env.REACT_APP_API_URL);//Find a way to get the API from the env
