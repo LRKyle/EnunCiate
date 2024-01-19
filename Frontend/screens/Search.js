@@ -16,8 +16,6 @@ const langSetting = [
   {language: 'French', dialects: ['French Dialect', 'Canadian Dialect'], regionCode: ['fr-FR', 'fr-CA']},
   {language: 'Spanish', dialects: ['Spaniard Dialect', 'Mexico Dialect'], regionCode: ['es-ES', 'es-MX']},
   {language: 'Chinese', dialects: ['Mandarin Dialect (Simplified)', 'Cantonese Dialect (Traditional)'], regionCode: ['zh-CN', 'zh-HK']},
-];
-
 
 export const Search = ({navigation}) => {
   const [value, setValue] = useState('');

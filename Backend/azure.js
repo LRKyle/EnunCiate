@@ -15,8 +15,8 @@ app.use(express.json({limit: '50mb'}));
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 
-function main(refText, lang, audioFile) {
-    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
+function main(refText, lang) {
+    var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync("./assets/audioFile.wav"));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
 
     var reference_text = refText
@@ -79,9 +79,7 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
         res.sendStatus(200);
     } 
     catch (error) {console.error('Failed to convert file to WAV format', error); res.sendStatus(409);}
-    
-});
-
+}
 app.listen(3000, () => {
 console.log('Server is running on port 3000');
 });
