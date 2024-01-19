@@ -5,6 +5,8 @@ const _ = require('lodash');
 var fs = require("fs");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath('./ffmpeg-6.1.1-essentials_build/bin/ffmpeg.exe');
 require('dotenv').config();
 
 const app = express();
@@ -26,7 +28,7 @@ function main(refText, lang) {
         true
     );
     pronunciationAssessmentConfig.enableProsodyAssessment = true;
-    speechConfig.speechRecognitionLanguage = 'en-US'//lang;
+    speechConfig.speechRecognitionLanguage = lang//lang;
 
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
     pronunciationAssessmentConfig.applyTo(reco);
@@ -51,24 +53,33 @@ function main(refText, lang) {
             res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});
             //res.send(hi);
         })
-
-
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
 
+function convertToWav(inputPath, outputPath) {
+    return new Promise((resolve, reject) => {
+      ffmpeg(inputPath)
+        .output(outputPath)
+        .format('wav')
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
+    });
+  }  
 
-app.patch('/upload', (req, res) => {req.pipe(fs.createWriteStream('./assets/audioFile.wav')); res.end('OK');});
+app.post('/upload', upload.single('audio-record'), async (req, res) => {
+    const inputPath = req.file.path;
+    const outputPath = req.file.path + '.wav'
 
-app.post('/backend', (req, res) => {
-    const searchVal = req.body.searchVal;
-    const langVal = req.body.langVal;
-    console.log("I miss the old Kanye");
-
-   res.sendStatus(200);
-   main(searchVal, langVal);
-});
-
+    try {
+        await convertToWav(inputPath, outputPath);
+        console.log(outputPath)
+        main(req.body.searchVal, req.body.lang, outputPath);
+        res.sendStatus(200);
+    } 
+    catch (error) {console.error('Failed to convert file to WAV format', error); res.sendStatus(409);}
+}
 app.listen(3000, () => {
 console.log('Server is running on port 3000');
 });

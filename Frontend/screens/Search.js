@@ -1,18 +1,21 @@
 import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
-import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
+import {TouchableWithoutFeedback, StyleSheet, ActivityIndicator} from 'react-native'
 import {Audio} from 'expo-av'
-import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, Divider, Button, Icon, IconRegistry,} from '@ui-kitten/components'
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import axios from 'axios';
+import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Popover} from '@ui-kitten/components'
+import { EvaIconsPack } from '@ui-kitten/eva-icons'
+import ky from 'ky'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import * as FileSystem from 'expo-file-system'
-
-const data = [
-  { text: 'EN' },
-  { text: 'FR' },
-  { text: 'RUS' },
-];
+const langSetting = [
+  {
+    language: 'English',
+    dialects: ['American Dialect', 'Canadian Dialect', 'British Dialect', 'Australia Dialect', 'Indian Dialect'],
+    regionCode: ['en-US', 'en-CA', 'en-GB', 'en-AU', 'en-IN'] 
+  },
+  {language: 'French', dialects: ['French Dialect', 'Canadian Dialect'], regionCode: ['fr-FR', 'fr-CA']},
+  {language: 'Spanish', dialects: ['Spaniard Dialect', 'Mexico Dialect'], regionCode: ['es-ES', 'es-MX']},
+  {language: 'Chinese', dialects: ['Mandarin Dialect (Simplified)', 'Cantonese Dialect (Traditional)'], regionCode: ['zh-CN', 'zh-HK']},
 
 export const Search = ({navigation}) => {
   const [value, setValue] = useState('');
@@ -20,22 +23,20 @@ export const Search = ({navigation}) => {
   const [done, setDone] = useState(false);
   const [recording, setRecording] = useState();
   const [uri, setURI] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedValue, setSelectedValue] = useState(data[0].text);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [lang, setLang] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [visible, setVisible] = React.useState(false);
+
   
   //micOff / micOn  
   const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
   const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
-
-  const onSelect = (index) => {
-    setSelectedIndex(index);
-    setSelectedValue(data[index.row].text);
-  };
   
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.didJustFinish){stopPlayback()}
   });
-
+  
   async function startRecording() {
     try {
       console.log('Requesting permissions..');
@@ -43,41 +44,16 @@ export const Search = ({navigation}) => {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
-        staysActiveInBackground: true,
-        shouldDuckAndroid: true,
-        playThroughEarpieceAndroid: false,
       });
 
       console.log('Starting recording..');
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync({
-        android: {
-          extension: '.wav',
-          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_PCM_16BIT,
-          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_PCM_16BIT,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-        },
-
-        ios: {
-          extension: '.wav',
-          outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_LINEARPCM,
-          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MAX,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-          bitRate: 256000,
-          linearPCMBitDepth: 16,
-          linearPCMIsBigEndian: false,
-          linearPCMIsFloat: false,
-        },
-      });
-
-      await recording.startAsync();
+      const {recording} = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
       setRecording(recording);
       setDone(false);
       console.log('Recording started');
-    } 
-    catch (err) {console.error('Failed to start recording', err);}
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
   }
 
   async function stopRecording() {
@@ -87,26 +63,29 @@ export const Search = ({navigation}) => {
     setURI(recording.getURI());
     setRecording();
     setDone(true);
-    console.log('Recording stopped and stored at', typeof(uri), uri, "!");//Doesn't show up here but it works
+    console.log('Recording stopped and stored');
   }
 
-  const AH = async () => {// replace with the file you want to download
-    try {
-      const response = await FileSystem.uploadAsync(process.env.REACT_APP_AUDIO, uri, {
-        fieldName: 'file',
-        httpMethod: 'PATCH',
-        uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
-      });
+  const submit = async () => {
+    setIsLoading(true)
+    const filetype = uri.split(".").pop();
+    const fd = new FormData();
+    fd.append("audio-record", {
+      name: "audioFile",
+      uri: uri,
+      type: `audio/${filetype}`,
+    });
+    fd.append("searchVal", value);
+    fd.append("lang", lang);
+     
+    try{await ky.post(process.env.REACT_APP_AUDIO, {body: fd}); setIsLoading(false); navigation.navigate('Analyze', {searchVal: value, lang: lang});}
+    catch(error){setIsLoading(false)}
+  }
 
-      //console.log(JSON.stringify(response, null, 4));
-      
-      axios.post(process.env.REACT_APP_BACKEND, {searchVal: value, langVal: selectedValue})
-      .then((response) => {console.log(response.data);})
-      .catch((error)=> {console.error(error, " Post Error :(")})  
-
-    } catch (error) {
-      console.log(error);
-    }
+  if (isLoading){
+    return(
+      <ApplicationProvider {...eva} theme = {eva.dark}><Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><Spinner status= "success" size = "giant" style={{ justifyContent: 'center', alignItems: 'center'}}/></Layout></ApplicationProvider>
+    )
   }
 
   return (
@@ -115,23 +94,28 @@ export const Search = ({navigation}) => {
       <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style={styles.container}>
           <Layout>
-            <Text style={styles.color = '#f7faff'} category='h1'>Language Assessment</Text>
-            <Text style={{textAlign: 'center'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
-            <Text  style={{textAlign: 'center', marginBottom: '5%'}}>Remember to select a language!</Text>
-            <Divider style = {styles.test}/>
+            <Text style={styles.color = '#f7faff'} category='h2'>Language Assessment</Text>
+            <Text style={{textAlign: 'center', marginBottom: '5%'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
+            <Divider/>
           </Layout>
           <Layout style={styles.row}>
             <Input style ={styles.input} placeholder = 'Pronunced Word' value={value} accessoryRight={recording ? micFill : micOutline} onChangeText={nextValue => setValue(nextValue)}/> 
-            
           </Layout>
           <Select
-            style = {{width: '30%'}}
-            selectedIndex={selectedIndex}
-            onSelect={onSelect}
-            value={selectedValue}>
-            {data.map((item, index) => (<SelectItem key={index} title={item.text}/>))}
+            style={{width: '45%'}}
+            onSelect={(item) => { 
+              setSelectedValue(langSetting[item.section].dialects[item.row]);
+              setLang(langSetting[item.section].regionCode[item.row]);
+            }}
+            placeholder={selectedValue ? selectedValue : 'Select a language'}
+          >
+            {langSetting.map((group, index) => (
+              <SelectGroup key={index} title={group.language}>
+                {group.dialects.map((dialect, index) => (<SelectItem key={index} title={dialect}/>))}
+              </SelectGroup>
+            ))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done ? false : true} appearance='outline' onPress={AH}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' disabled = {value && done && selectedValue ? false : true} appearance='outline' onPress={submit}>Analyze your pronunciation!</Button>
         </Layout>
       </ApplicationProvider>    
     </>
@@ -165,11 +149,3 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 });
-
-/*<Button
-  style = {{height: '30%'}}
-  status='success' 
-  appearance='ghost' 
-  onPress={recording ? stopRecording : startRecording}
-  accessoryLeft={recording ? micFill : micOutline}
-  /> */

@@ -7,11 +7,10 @@ import axios from 'axios';
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
-  const [backData, setBackData] = React.useState([{}]);
+  const [backData, setBackData] = useState([{}]);
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL);//Find a way to get the API from the env
-    axios.get(process.env.REACT_APP_API_URL) //Use IP instead of localhost
+    axios.get(process.env.REACT_APP_API_URL)
     .then((response) => {
       setBackData(response.data);
       console.log(response.data);
@@ -28,8 +27,6 @@ export const Analyze = ({route}) => {
         <Layout style={styles.container}>  
           <Text>{typeof(backData)}</Text>
           <Text>{backData['Completeness Score']}</Text>
-          
-            
         </Layout>
     </ApplicationProvider>
   );
