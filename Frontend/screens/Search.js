@@ -30,8 +30,8 @@ export const Search = ({navigation}) => {
 
   
   //micOff / micOn  
-  const micOutline = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
-  const micFill = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
+  const micOff = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
+  const micOn = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
   
   sound.setOnPlaybackStatusUpdate((status) => {
     if (status.didJustFinish){stopPlayback()}
@@ -99,7 +99,7 @@ export const Search = ({navigation}) => {
             <Divider/>
           </Layout>
           <Layout style={styles.row}>
-            <Input style ={styles.input} placeholder = 'Pronunced Word' value={value} accessoryRight={recording ? micFill : micOutline} onChangeText={nextValue => setValue(nextValue)}/> 
+            <Input style ={styles.input} placeholder = 'Pronunced Word' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
           </Layout>
           <Select
             style={{width: '45%'}}
