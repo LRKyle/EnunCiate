@@ -28,6 +28,9 @@ yarn-error.*
 .DS_Store
 *.pem
 
+#Upload clips
+Backend/uploads/
+
 # local env files
 .env*.local
 .env
