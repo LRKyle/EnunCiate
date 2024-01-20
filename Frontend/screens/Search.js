@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
-import {TouchableWithoutFeedback, StyleSheet, ActivityIndicator} from 'react-native'
+import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Popover} from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import ky from 'ky'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 const langSetting = [
   {
