@@ -11,44 +11,34 @@ const chartConfig = {
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
 };
 
-const data = [
-  { quarter: 1, earnings: 13000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 19000 }
-];
-
-
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
   
-  useEffect(() => {
-    axios.get(process.env.REACT_APP_API_URL)
-    .then((response) => {
-      setBackData(response.data);
-      console.log(response.data);
-    })
-    .catch((error)=> {
-      console.error(error, "sda sdasd a")
-    })
-  }, []);
+  axios.get(process.env.REACT_APP_API_URL)
+  .then((response) => {
+    setBackData(response.data);
+    console.log(response.data);
+  })
+  .catch((error)=> {
+    console.error(error, "sda sdasd a")
+  })
 
   const pronunciationScore = [
-    { x: undefined, y: backData['Pronunciation Score']},//0
-    { x: undefined, y: 100 - backData['Pronunciation Score']},//1
+    { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
+    { x: 2, y: 100 - Math.round(backData['Pronunciation Score'])},//1
   ]
   const completenessScore = [
-    { x: undefined, y: backData['Completeness Score']},
-    { x: undefined, y: 100 - backData['Completeness Score']},
+    { x: 1, y: Math.round(backData['Completeness Score'])},
+    { x: 2, y: 100 - Math.round(backData['Completeness Score'])},
   ];
   const fluencyScore = [
-    { x: undefined, y: backData['Fluency Score']},
-    { x: undefined, y: 100 - backData['Fluency Score']},
+    { x: 1, y: Math.round(backData['Fluency Score'])},
+    { x: 2, y: 100 - Math.round(backData['Fluency Score'])},
   ];
   const prosodyScore = [
-    { x: undefined, y: backData['Prosody Score']},
-    { x: undefined, y: 100 - backData['Prosody Score']},
+    { x: 1, y: Math.round(backData['Prosody Score'])},
+    { x: 2, y: 100 - Math.round(backData['Prosody Score'])},
   ];
 
   return (
