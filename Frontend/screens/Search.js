@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import * as eva from '@eva-design/eva'
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
-import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Popover} from '@ui-kitten/components'
+import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Modal} from '@ui-kitten/components'
 import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import ky from 'ky'
 
@@ -79,7 +79,7 @@ export const Search = ({navigation}) => {
     fd.append("lang", lang);
      
     try{await ky.post(process.env.REACT_APP_AUDIO, {body: fd}); setIsLoading(false); navigation.navigate('Analyze', {searchVal: value, lang: lang});}
-    catch(error){setIsLoading(false)}
+    catch(error){setIsLoading(false); setVisible(true);}
   }
 
   if (isLoading){
@@ -115,7 +115,16 @@ export const Search = ({navigation}) => {
               </SelectGroup>
             ))}
           </Select>
-          <Button style={{marginTop: 5}} status='success' disabled = {value && done && selectedValue ? false : true} appearance='outline' onPress={submit}>Analyze your pronunciation!</Button>
+          <Button style={{marginTop: 5}} status='success' appearance='outline' disabled = {value && done && selectedValue ? false : true} onPress={submit}>Analyze your pronunciation!</Button>
+          <Modal backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}} visible={visible}>
+            <Layout>
+              <Text style={{textAlign: 'center',}}category='h2'>Error!</Text> 
+              <Divider/>
+              <Text style={{textAlign: 'center',marginTop:'2%'}}> Please try again when you have a{"\n"}stable internet connection.</Text>
+              <Divider/>
+              <Button status='danger' appearance='outline' onPress={() => setVisible(false)}>OK</Button>
+            </Layout>
+          </Modal>
         </Layout>
       </ApplicationProvider>    
     </>
