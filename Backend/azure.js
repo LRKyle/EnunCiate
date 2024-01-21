@@ -28,7 +28,7 @@ function main(refText, lang, audioFile) {
         true
     );
     pronunciationAssessmentConfig.enableProsodyAssessment = true;
-    speechConfig.speechRecognitionLanguage = lang//lang;
+    speechConfig.speechRecognitionLanguage = lang
 
     var reco = new sdk.SpeechRecognizer(speechConfig, audioConfig);
     pronunciationAssessmentConfig.applyTo(reco);
