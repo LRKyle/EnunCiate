@@ -15,18 +15,20 @@ export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
   
-  axios.get(process.env.REACT_APP_API_URL)
-  .then((response) => {
-    setBackData(response.data);
-    console.log(response.data);
-  })
-  .catch((error)=> {
-    console.error(error, "sda sdasd a")
-  })
+  useEffect(() => {
+    axios.get(process.env.REACT_APP_API_URL)
+    .then((response) => {
+      setBackData(response.data);
+      console.log(response.data);
+    })
+    .catch((error)=> {
+      console.error(error, "sda sdasd a")
+    })
+  }, []);
 
   const pronunciationScore = [
-    { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
-    { x: 2, y: 100 - Math.round(backData['Pronunciation Score'])},//1
+    { x: 0, y: Math.round(backData['Pronunciation Score'])},//0
+    { x: 1, y: 100 - Math.round(backData['Pronunciation Score'])},//1
   ]
   const completenessScore = [
     { x: 1, y: Math.round(backData['Completeness Score'])},
@@ -48,7 +50,9 @@ export const Analyze = ({route}) => {
           <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
             <VictoryPie
               data={pronunciationScore}
+              animate={{ duration: 1000 }}
               innerRadius={90}
+              cornerRadius={3}
               colorScale={['red', '#ecf0f1']}
               width={300}
               height={300}
@@ -58,7 +62,9 @@ export const Analyze = ({route}) => {
           <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
             <VictoryPie
               data={completenessScore}
+              animate={{ duration: 1000 }}
               innerRadius={80}
+              cornerRadius={2}
               colorScale={['blue', '#ecf0f1']}
               width={260}
               height={260}
@@ -68,7 +74,9 @@ export const Analyze = ({route}) => {
           <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
             <VictoryPie
               data={fluencyScore}
+              animate={{ duration: 1000 }}
               innerRadius={60}
+              cornerRadius={2}
               colorScale={['yellow', '#ecf0f1']}
               width={220}
               height={220}
@@ -78,7 +86,9 @@ export const Analyze = ({route}) => {
           <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
             <VictoryPie
               data={prosodyScore}
+              animate={{ duration: 1000 }}
               innerRadius={60}
+              cornerRadius={2}
               colorScale={['green', '#ecf0f1']}
               width={150}
               height={150}
