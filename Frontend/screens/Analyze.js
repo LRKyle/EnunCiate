@@ -18,8 +18,7 @@ export const Analyze = ({route}) => {
   useEffect(() => {
     axios.get(process.env.REACT_APP_API_URL)
     .then((response) => {
-      setBackData(response.data);
-      console.log(response.data);
+      setBackData(response.data)
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
@@ -64,6 +63,7 @@ export const Analyze = ({route}) => {
                 height={300}
                 padding={30}
                 labels={() => null}
+                style={{ data: { strokeWidth: 3 } }}
               />
             </Layout>  
             <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 20, borderColor: 'rgba(0, 0, 0, 0)'}}>
@@ -106,16 +106,17 @@ export const Analyze = ({route}) => {
               <Text category='h1'>{backData['Overall Accuracy Score']}</Text>
             </Layout>
             
-            <Layout style={[styles.resultKeys, {marginTop: '75%'}]}>
+            <Layout style={[styles.resultKeys, {marginTop: '115%'}]}>
               <Card style={styles.card} header={headerPS}><Text style={{textAlign:'center'}}>Pronunciation Score</Text></Card>
               <Card style={styles.card} header={headerCS}><Text style={{textAlign:'center'}}>Completeness Score</Text></Card>
             </Layout>
-            <Layout style={[styles.resultKeys, {marginTop: '100%'}]}>
+            <Layout style={[styles.resultKeys, {marginTop: '140%'}]}>
               <Card style={styles.card} header={headerFS}><Text style={{textAlign:'center'}}>Fluency {"\n"} Score</Text></Card>
               <Card style={styles.card} header={headerProS}><Text style={{textAlign:'center'}}>Prosody {"\n"} Score</Text></Card>
             </Layout>
-            <Layout style={[styles.resultKeys, {marginTop: '75%'}]}>
-            
+            <Layout style={[styles.sentence, {marginBottom:'15%'}]}>
+              <Text style={{textAlign:'center'}} category='h3'>Sentence Evaluation</Text>
+              <Text style={{marginLeft: '10%', marginRight: '10%'}}>{searchVal}</Text>
             </Layout>
 
           </Layout>
@@ -137,6 +138,12 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(0, 0, 0, 0)', 
       flexDirection:'row',
       position: 'absolute',
+    },
+    sentence: {
+      flex: 1, 
+      alignItems: 'center',
+      justifyContent:'center', 
+      backgroundColor: 'rgba(0, 0, 0, 0)', 
     },
     card: {
       margin: 2,
