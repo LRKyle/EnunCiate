@@ -58,9 +58,19 @@ function main(refText, lang, audioFile) {
             sentArr.errorType.push(word.PronunciationAssessment.ErrorType);
         });
         reco.close();
-        app.get('/api', (req, res) => {res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "sentDetails": [sentArr]});})
+        app.get('/api', (req, res) => 
+        {
+            res.json({
+                "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
+                "Pronunciation Score": [pronunciation_result.pronunciationScore], 
+                "Completeness Score": [pronunciation_result.completenessScore], 
+                "Fluency Score": [pronunciation_result.fluencyScore], 
+                "Prosody Score": [pronunciation_result.prosodyScore], 
+                
+            })
+        })
         //res.send(hi);
-        console.log(sentArr)
+        //console.log(sentArr)
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }

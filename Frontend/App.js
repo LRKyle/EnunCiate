@@ -9,8 +9,8 @@ export default function App() {
   return(
     <NavigationContainer> 
       <Stack.Navigator initialRouteName='Search'>
-        <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, animation: 'slide_from_left'}}/>
-        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}} options={{headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, animation: 'none'}}/>
+        <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'slide_from_left'}}/>
+        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}} options={{headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'},  headerTintColor: 'white', animation: 'none'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

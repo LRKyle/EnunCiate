@@ -1,7 +1,7 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
-import {ApplicationProvider, Card, Divider, Layout, Text} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Button, Layout, Text} from '@ui-kitten/components'
 import axios from 'axios';
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
@@ -15,15 +15,15 @@ export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
   
-  useEffect(() => {
-    axios.get(process.env.REACT_APP_API_URL)
-    .then((response) => {
-      setBackData(response.data)
-    })
-    .catch((error)=> {
-      console.error(error, "sda sdasd a")
-    })
-  }, []);
+  //useEffect(() => {
+  axios.get(process.env.REACT_APP_API_URL)
+  .then((response) => {
+    setBackData(response.data)
+  })
+  .catch((error)=> {
+    console.error(error, "sda sdasd a")
+  })
+  //}, []);
 
   const pronunciationScore = [
     { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
@@ -116,7 +116,7 @@ export const Analyze = ({route}) => {
             </Layout>
             <Layout style={[styles.sentence, {marginBottom:'15%'}]}>
               <Text style={{textAlign:'center'}} category='h3'>Sentence Evaluation</Text>
-              <Text style={{marginLeft: '10%', marginRight: '10%'}}>{searchVal}</Text>
+              <Button style={{marginLeft: '10%', marginRight: '10%'}} onPress={() => console.log(backData)}>{searchVal}</Button>
             </Layout>
 
           </Layout>
