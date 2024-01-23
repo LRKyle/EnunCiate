@@ -99,10 +99,10 @@ export const Search = ({navigation}) => {
             <Divider/>
           </Layout>
           <Layout style={styles.row}>
-            <Input style ={styles.input} placeholder = 'Pronunced Word' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
+            <Input style ={styles.input} placeholder = 'Enter a word!' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
           </Layout>
           <Select
-            style={{width: '45%'}}
+            style={{width: '45%', margin: 5}}
             onSelect={(item) => { 
               setSelectedValue(langSetting[item.section].dialects[item.row]);
               setLang(langSetting[item.section].regionCode[item.row]);

@@ -15,9 +15,16 @@ app.use(express.json({limit: '50mb'}));
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 
+//Make a BIGGER array to store the sentArr data and sort it by date for the history feature
 function main(refText, lang, audioFile) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
+    var sentArr = {
+        index: [],
+        word: [],
+        accuracyScore: [],
+        errorType: []
+    };
 
     var reference_text = refText
 
@@ -45,12 +52,15 @@ function main(refText, lang, audioFile) {
         console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
+            sentArr.index.push(idx + 1);
+            sentArr.word.push(word.Word);
+            sentArr.accuracyScore.push(word.PronunciationAssessment.AccuracyScore);
+            sentArr.errorType.push(word.PronunciationAssessment.ErrorType);
         });
         reco.close();
-
-        app.get('/api', (req, res) => {res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "Word-level details": [pronunciation_result.detailResult.Words]});})
+        app.get('/api', (req, res) => {res.json({"Overall Accuracy Score": [pronunciation_result.accuracyScore], "Pronunciation Score": [pronunciation_result.pronunciationScore], "Completeness Score": [pronunciation_result.completenessScore], "Fluency Score": [pronunciation_result.fluencyScore], "Prosody Score": [pronunciation_result.prosodyScore], "sentDetails": [sentArr]});})
         //res.send(hi);
-        console.log(pronunciation_result.detailResult.Words)
+        console.log(sentArr)
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
