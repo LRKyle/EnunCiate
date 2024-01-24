@@ -14,6 +14,7 @@ app.use(express.json({limit: '50mb'}));
 
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
+let data = {};
 
 //Make a BIGGER array to store the sentArr data and sort it by date for the history feature
 function main(refText, lang, audioFile) {
@@ -58,19 +59,15 @@ function main(refText, lang, audioFile) {
             sentArr.errorType.push(word.PronunciationAssessment.ErrorType);
         });
         reco.close();
-        app.get('/api', (req, res) => 
-        {
-            res.json({
-                "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
-                "Pronunciation Score": [pronunciation_result.pronunciationScore], 
-                "Completeness Score": [pronunciation_result.completenessScore], 
-                "Fluency Score": [pronunciation_result.fluencyScore], 
-                "Prosody Score": [pronunciation_result.prosodyScore], 
-                
-            })
-        })
-        //res.send(hi);
-        //console.log(sentArr)
+        
+        data = {
+            "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
+            "Pronunciation Score": [pronunciation_result.pronunciationScore], 
+            "Completeness Score": [pronunciation_result.completenessScore], 
+            "Fluency Score": [pronunciation_result.fluencyScore], 
+            "Prosody Score": [pronunciation_result.prosodyScore], 
+            "sentDetails": sentArr
+        }
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
@@ -101,4 +98,8 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
 
 app.listen(3000, () => {
 console.log('Server is running on port 3000');
+});
+
+app.get('/api', (req, res) => {
+    res.json(data);
 });

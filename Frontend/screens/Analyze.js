@@ -2,7 +2,7 @@ import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
 import {ApplicationProvider, Card, Button, Layout, Text} from '@ui-kitten/components'
-import axios from 'axios';
+import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
 const chartConfig = {
@@ -15,15 +15,17 @@ export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
   
-  //useEffect(() => {
-  axios.get(process.env.REACT_APP_API_URL)
-  .then((response) => {
-    setBackData(response.data)
-  })
-  .catch((error)=> {
-    console.error(error, "sda sdasd a")
-  })
-  //}, []);
+  useEffect(() => {
+    ky.get(process.env.REACT_APP_API_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      setBackData(data)
+      console.log(data['Overall Accuracy Score'], "sda sdasd a")
+    })
+    .catch((error)=> {
+      console.error(error, "sda sdasd a")
+    })
+  }, []);
 
   const pronunciationScore = [
     { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
@@ -46,7 +48,6 @@ export const Analyze = ({route}) => {
   const headerCS = (props) => (<Text {...props} style={{backgroundColor: '#167d61', textAlign:'center'}}>{backData['Completeness Score']}</Text>);
   const headerFS = (props) => (<Text {...props} style={{backgroundColor: '#16A085', textAlign:'center'}}>{backData['Fluency Score']}</Text>);
   const headerProS= (props) => (<Text {...props} style={{backgroundColor: '#08b683', textAlign:'center'}}>{backData['Prosody Score']}</Text>);
-  
   
   return (
     <>
