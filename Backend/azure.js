@@ -53,10 +53,7 @@ function main(refText, lang, audioFile) {
         console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
-            sentArr.index.push(idx + 1);
-            sentArr.word.push(word.Word);
-            sentArr.accuracyScore.push(word.PronunciationAssessment.AccuracyScore);
-            sentArr.errorType.push(word.PronunciationAssessment.ErrorType);
+            
         });
         reco.close();
         
@@ -101,5 +98,11 @@ console.log('Server is running on port 3000');
 });
 
 app.get('/api', (req, res) => {
+    console.log(data['sentDetails'], "respect the hero!")
     res.json(data);
 });
+/*if (word.PronunciationAssessment.ErrorType != sdk.PronunciationAssessmentErrorType.None) {
+                sentArr.
+            } 
+To isolate the errors and the words that are wrong, we can use the following code^
+*/

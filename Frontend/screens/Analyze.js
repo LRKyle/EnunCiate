@@ -11,16 +11,34 @@ const chartConfig = {
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
 };
 
+
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
+
+  const [selectedWord, setSelectedWord] = useState(null);
+  const sentence = 'This is a test sentence';
+  const mistakes = ['test', 'sentence'];
+  
+  function highlightMistakes(sentence, mistakes) {
+    return sentence.split(' ').map((word, index) => {
+      if (mistakes.includes(word)) {
+        return (
+          <Text key={index} style={{color: 'red'}} onPress={() => setSelectedWord(word)}>
+            {word} 
+          </Text>
+        );
+      } else {
+        return <Text key={index}>{word} </Text>;
+      }
+    });
+  }
   
   useEffect(() => {
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
     .then((data) => {
       setBackData(data)
-      console.log(data['Overall Accuracy Score'], "sda sdasd a")
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
@@ -115,9 +133,17 @@ export const Analyze = ({route}) => {
               <Card style={styles.card} header={headerFS}><Text style={{textAlign:'center'}}>Fluency {"\n"} Score</Text></Card>
               <Card style={styles.card} header={headerProS}><Text style={{textAlign:'center'}}>Prosody {"\n"} Score</Text></Card>
             </Layout>
+
             <Layout style={[styles.sentence, {marginBottom:'15%'}]}>
-              <Text style={{textAlign:'center'}} category='h3'>Sentence Evaluation</Text>
-              <Button style={{marginLeft: '10%', marginRight: '10%'}} onPress={() => console.log(backData)}>{searchVal}</Button>
+            {highlightMistakes(sentence, mistakes)}
+            {selectedWord && (
+              <Card>
+                <Text category='h6'>Word: {selectedWord}</Text>
+                <Text category='s1'>Mistake Details</Text>
+                {/* Add details here */}
+                <Text>This word has a mistake.</Text>
+              </Card>
+            )}
             </Layout>
 
           </Layout>
