@@ -11,7 +11,6 @@ const chartConfig = {
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
 };
 
-
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);

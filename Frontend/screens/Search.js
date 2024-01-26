@@ -17,6 +17,8 @@ const langSetting = [
   {language: 'Chinese', dialects: ['Mandarin Dialect (Simplified)', 'Cantonese Dialect (Traditional)'], regionCode: ['zh-CN', 'zh-HK']},
 ]
 
+console.log(process.env.REACT_APP_API_URL)
+
 export const Search = ({navigation}) => {
   const [value, setValue] = useState('');
   const [sound, setSound] = useState(new Audio.Sound());
@@ -94,7 +96,7 @@ export const Search = ({navigation}) => {
       <ApplicationProvider {...eva} theme = {eva.dark}>
         <Layout style={styles.container}>
           <Layout>
-            <Text style={styles.color = '#f7faff'} category='h2'>Language Assessment</Text>
+            <Text style={{color: '#f7faff', textAlign: 'center'}} category='h2'>Language Assessment</Text>
             <Text style={{textAlign: 'center', marginBottom: '5%'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
             <Divider/>
           </Layout>
