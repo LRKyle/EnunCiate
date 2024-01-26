@@ -15,18 +15,18 @@ app.use(express.json({limit: '50mb'}));
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 let data = {};
+//Make a BIGGER array to store the errArr data and sort it by date for the history feature
 
-//Make a BIGGER array to store the sentArr data and sort it by date for the history feature
+var errArr = {
+    index: [],
+    word: [],
+    accuracyScore: [],
+    errorType: []
+};
+
 function main(refText, lang, audioFile) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
-    var sentArr = {
-        index: [],
-        word: [],
-        accuracyScore: [],
-        errorType: []
-    };
-
     var reference_text = refText
 
     const pronunciationAssessmentConfig = new sdk.PronunciationAssessmentConfig(
@@ -53,7 +53,12 @@ function main(refText, lang, audioFile) {
         console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
-            
+            if (word.PronunciationAssessment.ErrorType != "None") {
+                errArr['index'].push(idx + 1);
+                errArr['word'].push(word.Word);
+                errArr['accuracyScore'].push(word.PronunciationAssessment.AccuracyScore);
+                errArr['errorType'].push(word.PronunciationAssessment.ErrorType);                
+            }
         });
         reco.close();
         
@@ -63,7 +68,7 @@ function main(refText, lang, audioFile) {
             "Completeness Score": [pronunciation_result.completenessScore], 
             "Fluency Score": [pronunciation_result.fluencyScore], 
             "Prosody Score": [pronunciation_result.prosodyScore], 
-            "sentDetails": sentArr
+            "errDetails": errArr
         }
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
@@ -98,11 +103,17 @@ console.log('Server is running on port 3000');
 });
 
 app.get('/api', (req, res) => {
-    console.log(data['sentDetails'], "respect the hero!")
+    console.log(data, "respect the hero!")
     res.json(data);
+    errArr = {
+        index: [],
+        word: [],
+        accuracyScore: [],
+        errorType: []
+    };
 });
 /*if (word.PronunciationAssessment.ErrorType != sdk.PronunciationAssessmentErrorType.None) {
-                sentArr.
+                errArr.
             } 
 To isolate the errors and the words that are wrong, we can use the following code^
 */

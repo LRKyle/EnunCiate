@@ -1,7 +1,7 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
-import {ApplicationProvider, Card, Button, Layout, Text} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Button, Layout, Text, Divider} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
@@ -16,10 +16,22 @@ export const Analyze = ({route}) => {
   const [backData, setBackData] = useState([{}]);
 
   const [selectedWord, setSelectedWord] = useState(null);
-  const sentence = 'This is a test sentence';
-  const mistakes = ['test', 'sentence'];
+  const [backDataMistakes, setBackDataMistakes] = useState([]);
   
+  useEffect(() => {
+    ky.get(process.env.REACT_APP_API_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      setBackData(data)
+      setBackDataMistakes(data['errDetails']['word'])
+    })
+    .catch((error)=> {
+      console.error(error, "sda sdasd a")
+    })
+  }, []);
+
   function highlightMistakes(sentence, mistakes) {
+    sentence = sentence.toLowerCase();//The problem is that the cases aren't matching up so Omissions fall through the cracks
     return sentence.split(' ').map((word, index) => {
       if (mistakes.includes(word)) {
         return (
@@ -27,22 +39,10 @@ export const Analyze = ({route}) => {
             {word} 
           </Text>
         );
-      } else {
-        return <Text key={index}>{word} </Text>;
-      }
+      } 
+      else {return <Text key={index}>{word} </Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
     });
   }
-  
-  useEffect(() => {
-    ky.get(process.env.REACT_APP_API_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      setBackData(data)
-    })
-    .catch((error)=> {
-      console.error(error, "sda sdasd a")
-    })
-  }, []);
 
   const pronunciationScore = [
     { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
@@ -124,27 +124,26 @@ export const Analyze = ({route}) => {
               <Text category='h1'>{backData['Overall Accuracy Score']}</Text>
             </Layout>
             
-            <Layout style={[styles.resultKeys, {marginTop: '115%'}]}>
+            <Layout style={[styles.resultKeys, {marginTop: '100%'}]}>
               <Card style={styles.card} header={headerPS}><Text style={{textAlign:'center'}}>Pronunciation Score</Text></Card>
               <Card style={styles.card} header={headerCS}><Text style={{textAlign:'center'}}>Completeness Score</Text></Card>
             </Layout>
-            <Layout style={[styles.resultKeys, {marginTop: '140%'}]}>
+            <Layout style={[styles.resultKeys, {marginTop: '125%'}]}>
               <Card style={styles.card} header={headerFS}><Text style={{textAlign:'center'}}>Fluency {"\n"} Score</Text></Card>
               <Card style={styles.card} header={headerProS}><Text style={{textAlign:'center'}}>Prosody {"\n"} Score</Text></Card>
             </Layout>
 
-            <Layout style={[styles.sentence, {marginBottom:'15%'}]}>
-            {highlightMistakes(sentence, mistakes)}
+            <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
+            {highlightMistakes(searchVal, backDataMistakes)}
             {selectedWord && (
               <Card>
-                <Text category='h6'>Word: {selectedWord}</Text>
-                <Text category='s1'>Mistake Details</Text>
-                {/* Add details here */}
-                <Text>This word has a mistake.</Text>
+                <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
+                <Divider/>
+                <Text>{backData['errDetails']['errorType']}</Text>
+                <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore']}</Text>
               </Card>
             )}
             </Layout>
-
           </Layout>
           
       </ApplicationProvider>
@@ -182,3 +181,6 @@ const styles = StyleSheet.create({
 //backData["Overall Accuracy Score"]
 //Instead of borderWidth, you could have used MarginTop and MarginLeft to position the progress bars
 //const headerOAS= (props) => (<Text {...props} style={{backgroundColor: 'white', textAlign:'center', color: 'black'}}>{backData['Overall Accuracy Score']}</Text>);
+/*else {
+  return <Text key={index}>{word} </Text>;
+  } */

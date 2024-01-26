@@ -17,8 +17,6 @@ const langSetting = [
   {language: 'Chinese', dialects: ['Mandarin Dialect (Simplified)', 'Cantonese Dialect (Traditional)'], regionCode: ['zh-CN', 'zh-HK']},
 ]
 
-console.log(process.env.REACT_APP_API_URL)
-
 export const Search = ({navigation}) => {
   const [value, setValue] = useState('');
   const [sound, setSound] = useState(new Audio.Sound());
