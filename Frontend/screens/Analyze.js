@@ -1,7 +1,7 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
-import {ApplicationProvider, Card, Button, Layout, Text, Divider,Popover} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Button, Layout, Text, Divider} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
@@ -141,21 +141,16 @@ export const Analyze = ({route}) => {
             </Layout>
 
             <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
-            <Popover
-              visible={selectedWord && !isCardClicked}
-              anchor={() => <Text onPress={() => setIsCardClicked(true)}>{highlightMistakes(searchVal, backDataMistakes)}</Text>}
-              onBackdropPress={() => setIsCardClicked(false)}
-            >
-              {backData && backData['errDetails'] && selectedWord && (
-                <Card>
+              <Text>{highlightMistakes(searchVal, backDataMistakes)}</Text>
+              {selectedWord && !isCardClicked && (
+                <Card style={{position:'absolute'}} onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/>
                   <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
                   <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
                 </Card>
               )}
-            </Popover>
-          </Layout>
+            </Layout>
           </Layout>
           
       </ApplicationProvider>
