@@ -143,7 +143,7 @@ export const Analyze = ({route}) => {
             <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
               <Text>{highlightMistakes(searchVal, backDataMistakes)}</Text>
               {selectedWord && !isCardClicked && (
-                <Card style={{position:'absolute'}} onPress={() => setIsCardClicked(true)}>
+                <Card style={{position:'absolute'}}onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/>
                   <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
