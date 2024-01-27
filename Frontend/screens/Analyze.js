@@ -31,16 +31,19 @@ export const Analyze = ({route}) => {
   }, []);
 
   function highlightMistakes(sentence, mistakes) {
+    
     sentence = sentence.toLowerCase();//The problem is that the cases aren't matching up so Omissions fall through the cracks
+    checkMistakes = mistakes.map((word) => word.toLowerCase());
     return sentence.split(' ').map((word, index) => {
-      if (mistakes.includes(word)) {
+      if (checkMistakes.includes(word)) {
+        if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
           <Text key={index} style={{color: 'red'}} onPress={() => setSelectedWord(word)}>
             {word} 
           </Text>
         );
       } 
-      else {return <Text key={index}>{word} </Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
+      else {return <Text key={index}>{word}</Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
     });
   }
 
@@ -134,15 +137,15 @@ export const Analyze = ({route}) => {
             </Layout>
 
             <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
-            {highlightMistakes(searchVal, backDataMistakes)}
-            {selectedWord && (
-              <Card>
-                <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
-                <Divider/>
-                <Text>{backData['errDetails']['errorType']}</Text>
-                <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore']}</Text>
-              </Card>
-            )}
+              {highlightMistakes(searchVal, backDataMistakes)}
+              {selectedWord && (
+                <Card>
+                  <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
+                  <Divider/>
+                  <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
+                  <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
+                </Card>
+              )}
             </Layout>
           </Layout>
           
@@ -184,3 +187,5 @@ const styles = StyleSheet.create({
 /*else {
   return <Text key={index}>{word} </Text>;
   } */
+
+//{console.log(selectedWord, " || ", backData['errDetails']['errorType'], " || ",  backData['errDetails']['word'].indexOf(selectedWord))}
