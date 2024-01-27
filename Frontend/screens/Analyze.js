@@ -1,7 +1,7 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
-import {ApplicationProvider, Card, Button, Layout, Text, Divider} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Button, Layout, Text, Divider,Popover} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
@@ -14,6 +14,8 @@ const chartConfig = {
 export const Analyze = ({route}) => {
   const {searchVal, langVal} = route.params
   const [backData, setBackData] = useState([{}]);
+
+  const [isCardClicked, setIsCardClicked] = useState(false)
 
   const [selectedWord, setSelectedWord] = useState(null);
   const [backDataMistakes, setBackDataMistakes] = useState([]);
@@ -38,12 +40,14 @@ export const Analyze = ({route}) => {
       if (checkMistakes.includes(word)) {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
-          <Text key={index} style={{color: 'red'}} onPress={() => setSelectedWord(word)}>
-            {word} 
+          <Text key={index} style={{color: 'red'}} category='h6' onPress={() => {setSelectedWord(word); setIsCardClicked(false)}}>
+            {word + " "} 
           </Text>
         );
       } 
-      else {return <Text key={index}>{word}</Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
+      else {
+        if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
+        return <Text key={index} category='h6'>{word + " "}</Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
     });
   }
 
@@ -137,8 +141,12 @@ export const Analyze = ({route}) => {
             </Layout>
 
             <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
-              {highlightMistakes(searchVal, backDataMistakes)}
-              {selectedWord && (
+            <Popover
+              visible={selectedWord && !isCardClicked}
+              anchor={() => <Text onPress={() => setIsCardClicked(true)}>{highlightMistakes(searchVal, backDataMistakes)}</Text>}
+              onBackdropPress={() => setIsCardClicked(false)}
+            >
+              {backData && backData['errDetails'] && selectedWord && (
                 <Card>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/>
@@ -146,7 +154,8 @@ export const Analyze = ({route}) => {
                   <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
                 </Card>
               )}
-            </Layout>
+            </Popover>
+          </Layout>
           </Layout>
           
       </ApplicationProvider>
