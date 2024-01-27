@@ -89,6 +89,13 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
     const inputPath = req.file.path;
     const outputPath = req.file.path + '.wav'
 
+    errArr = {
+        index: [],
+        word: [],
+        accuracyScore: [],
+        errorType: []
+    };
+
     try {
         await convertToWav(inputPath, outputPath);
         console.log(outputPath)
@@ -105,12 +112,7 @@ console.log('Server is running on port 3000');
 app.get('/api', (req, res) => {
     console.log(data, "respect the hero!")
     res.json(data);
-    errArr = {
-        index: [],
-        word: [],
-        accuracyScore: [],
-        errorType: []
-    };
+    
 });
 /*if (word.PronunciationAssessment.ErrorType != sdk.PronunciationAssessmentErrorType.None) {
                 errArr.
