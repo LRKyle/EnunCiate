@@ -103,7 +103,7 @@ export const Analyze = ({route}) => {
     <>
       <ApplicationProvider {...eva} theme={eva.dark}>
         <Layout style={styles.container}>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', }}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginHorizontal: '37%'}}>
               
               <VictoryPie
                 data={pronunciationScore}
@@ -118,7 +118,7 @@ export const Analyze = ({route}) => {
                 
               />
             </Layout> 
-            <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '5%'}}> 
+            <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '5%', marginHorizontal: '40%'}}> 
               <VictoryPie
                 data={completenessScore}
                 innerRadius={80}
@@ -130,7 +130,7 @@ export const Analyze = ({route}) => {
                 labels={() => null}
               />
             </Layout>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '10%'}}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '10%', marginHorizontal: '43.3%'}}>
               <VictoryPie
                 data={fluencyScore}
                 innerRadius={60}
@@ -142,7 +142,7 @@ export const Analyze = ({route}) => {
                 labels={() => null}
               />
             </Layout>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '18.8%'}}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '18.8%', marginHorizontal: '49.5%'}}>
               <VictoryPie
                 data={prosodyScore}
                 innerRadius={60}
@@ -153,22 +153,33 @@ export const Analyze = ({route}) => {
                 padding={30}
                 labels={() => null}
               />
+              
             </Layout>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 125, borderColor: 'rgba(0, 0, 0, 0)'}}>
-              <Text category='h1'>{backData['Overall Accuracy Score']}</Text>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
+              <Text style={{marginTop: '41%',  marginLeft: '67%'}} category='h1'>{backData['Overall Accuracy Score']}</Text>
             </Layout>
             
-            <Layout style={[styles.resultKeys, {marginTop: '100%'}]}>
-              <Card style={styles.card} header={headerPS}><Text style={{textAlign:'center'}}>Pronunciation Score</Text></Card>
-              <Card style={styles.card} header={headerCS}><Text style={{textAlign:'center'}}>Completeness Score</Text></Card>
-            </Layout>
-            <Layout style={[styles.resultKeys, {marginTop: '125%'}]}>
-              <Card style={styles.card} header={headerFS}><Text style={{textAlign:'center'}}>Fluency {"\n"} Score</Text></Card>
-              <Card style={styles.card} header={headerProS}><Text style={{textAlign:'center'}}>Prosody {"\n"} Score</Text></Card>
+            <Layout style={{marginRight: '64%'}}>
+              <Card style={styles.card} header={headerPS}><Text style={{fontSize: 12, textAlign: 'center'}}>Pronunciation</Text></Card>
+              <Card style={styles.card} header={headerCS}><Text style={{fontSize: 12, textAlign: 'center'}}>Completeness</Text></Card>
+              <Card style={styles.card} header={headerFS}><Text style={{fontSize: 12, textAlign: 'center'}}>Fluency</Text></Card>
+              <Card style={styles.card} header={headerProS}><Text style={{fontSize: 12, textAlign: 'center'}}>Prosody</Text></Card>
             </Layout>
 
-            <Layout style={[styles.sentence, {marginBottom:'10%'}]}>
+            <Layout style={{flexDirection:'row', alignItems:'center'}}>
+              <Layout><Card style={{width: 15, height: 15, backgroundColor: '#49ab81'}}></Card></Layout>
+              <Text style={{marginRight: '5%'}}>61 ~ 100 </Text>
+              <Layout><Card style={{width: 15, height: 15, backgroundColor: '#f2b035'}}></Card></Layout>
+              <Text style={{marginRight: '8%'}}>31 ~ 60 </Text>
+              <Layout><Card style={{width: 15, height: 15, backgroundColor: '#bb002e'}}></Card></Layout>
+              <Text>0 ~ 30 </Text>
+            </Layout>
+            <Layout><Text category='h2'>Sentence Evaluation</Text></Layout>
+            <Layout>
+              
+              
               <Text>{highlightMistakes(searchVal, backDataMistakes)}</Text>
+
               {selectedWord && !isCardClicked && (
                 <Card style={{}} onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
@@ -192,10 +203,9 @@ const styles = StyleSheet.create({
     },
     resultKeys: {
       flex: 1, 
-      alignItems: 'center',
-      justifyContent:'center', 
+      alignItems: 'flex-start',
+      justifyContent:'flex-start', 
       backgroundColor: 'rgba(0, 0, 0, 0)', 
-      flexDirection:'row',
       position: 'absolute',
     },
     sentence: {
@@ -206,8 +216,8 @@ const styles = StyleSheet.create({
     },
     card: {
       margin: 2,
-      width: 150,
-      height: 90,
+      width: 130,
+      height: 70,
       backgroundColor: '#1b2137'
     },
 });
