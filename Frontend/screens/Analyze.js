@@ -74,10 +74,10 @@ export const Analyze = ({route}) => {
     { x: 2, y: 100 - Math.round(backData['Prosody Score'])},
   ];
 
-  const headerPS = (props) => (<Text {...props} style={{backgroundColor: '#0E6655', textAlign:'center'}}>{backData['Pronunciation Score']}</Text>);
-  const headerCS = (props) => (<Text {...props} style={{backgroundColor: '#167d61', textAlign:'center'}}>{backData['Completeness Score']}</Text>);
-  const headerFS = (props) => (<Text {...props} style={{backgroundColor: '#16A085', textAlign:'center'}}>{backData['Fluency Score']}</Text>);
-  const headerProS= (props) => (<Text {...props} style={{backgroundColor: '#08b683', textAlign:'center'}}>{backData['Prosody Score']}</Text>);
+  const headerPS = (props) => (<Text {...props} style={{backgroundColor: pronunColor, textAlign:'center'}}>{backData['Pronunciation Score']}</Text>);
+  const headerCS = (props) => (<Text {...props} style={{backgroundColor: compColor, textAlign:'center'}}>{backData['Completeness Score']}</Text>);
+  const headerFS = (props) => (<Text {...props} style={{backgroundColor: fluencyColor, textAlign:'center'}}>{backData['Fluency Score']}</Text>);
+  const headerProS= (props) => (<Text {...props} style={{backgroundColor: prosodyColor, textAlign:'center'}}>{backData['Prosody Score']}</Text>);
   
   
   useEffect(() => {
@@ -117,8 +117,8 @@ export const Analyze = ({route}) => {
                 labels={() => null}
                 
               />
-            </Layout>  
-            <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 20, borderColor: 'rgba(0, 0, 0, 0)'}}>
+            </Layout> 
+            <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '5%'}}> 
               <VictoryPie
                 data={completenessScore}
                 innerRadius={80}
@@ -130,7 +130,7 @@ export const Analyze = ({route}) => {
                 labels={() => null}
               />
             </Layout>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 40, borderColor: 'rgba(0, 0, 0, 0)'}}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '10%'}}>
               <VictoryPie
                 data={fluencyScore}
                 innerRadius={60}
@@ -142,7 +142,7 @@ export const Analyze = ({route}) => {
                 labels={() => null}
               />
             </Layout>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 75, borderColor: 'rgba(0, 0, 0, 0)'}}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginTop: '18.8%'}}>
               <VictoryPie
                 data={prosodyScore}
                 innerRadius={60}

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const _ = require('lodash');
 var fs = require("fs");
+const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const ffmpeg = require('fluent-ffmpeg');
@@ -110,9 +111,23 @@ app.listen(3000, () => {
 console.log('Server is running on port 3000');
 });
 
+function delUpload(){
+    const directory = 'uploads';
+    fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+      
+        for (const file of files) {
+          fs.unlink(path.join(directory, file), err => {
+            if (err) throw err;
+          });
+        }
+      });
+}
+
 app.get('/api', (req, res) => {
     console.log(data, "respect the hero!")
     res.json(data);
+    delUpload();//If you want to stop the deletion of the files, comment this out
     
 });
 /*if (word.PronunciationAssessment.ErrorType != sdk.PronunciationAssessmentErrorType.None) {
