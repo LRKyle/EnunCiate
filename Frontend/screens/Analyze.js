@@ -37,7 +37,25 @@ export const Analyze = ({route}) => {
     })
   }, []);
 
-  
+  useEffect(() => {
+    if (Math.round(backData['Pronunciation Score']) <= 30) {setPronunColor("#7a001e");} //Red
+    else if (Math.round(backData['Pronunciation Score']) <= 50) {setPronunColor("#d93b18");} //Yellow
+    else {setPronunColor("#317256");} //Green
+
+    if (Math.round(backData['Completeness Score']) <= 30) {setCompColor("#8a0022");}
+    else if (Math.round(backData['Completeness Score']) <= 50) {setCompColor("#f26513");}
+    else {setCompColor("#398564");}
+
+    if (Math.round(backData['Fluency Score']) <= 30) {setFluencyColor("#aa002a");}
+    else if (Math.round(backData['Fluency Score']) <= 50) {setFluencyColor("#f28f16");}
+    else {setFluencyColor("#419873");}
+
+    if (Math.round(backData['Prosody Score']) <= 30) {setProsodyColor("#bb002e");}
+    else if (Math.round(backData['Prosody Score']) <= 50) {setProsodyColor("#f2b035");}
+    else {setProsodyColor("#49ab81");}
+
+  }, []);      
+
 
   function highlightMistakes(sentence, mistakes) {
     sentence = sentence.toLowerCase();//The problem is that the cases aren't matching up so Omissions fall through the cracks
@@ -46,8 +64,11 @@ export const Analyze = ({route}) => {
       if (checkMistakes.includes(word)) {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
-          <Text key={index} style={{color: 'red'}} category='h6' onPress={() => {setSelectedWord(word); setIsCardClicked(false)}}>
-            {word + " "} 
+          <Text key={index} style={{color: 'red', fontSize: 20, lineHeight: 30}} category='h6' onPress={() => {setSelectedWord(word); setIsCardClicked(false)}}>
+            {word} 
+            <Text style={{fontSize: 11, lineHeight: 24}}>
+              {backData['errDetails']['indexScore'][index] + " "}
+            </Text>
           </Text>
         );
       } 
@@ -77,27 +98,7 @@ export const Analyze = ({route}) => {
   const headerPS = (props) => (<Text {...props} style={{backgroundColor: pronunColor, textAlign:'center'}}>{backData['Pronunciation Score']}</Text>);
   const headerCS = (props) => (<Text {...props} style={{backgroundColor: compColor, textAlign:'center'}}>{backData['Completeness Score']}</Text>);
   const headerFS = (props) => (<Text {...props} style={{backgroundColor: fluencyColor, textAlign:'center'}}>{backData['Fluency Score']}</Text>);
-  const headerProS= (props) => (<Text {...props} style={{backgroundColor: prosodyColor, textAlign:'center'}}>{backData['Prosody Score']}</Text>);
-  
-  
-  useEffect(() => {
-    if (Math.round(backData['Pronunciation Score']) <= 30) {setPronunColor("#7a001e");} //Red
-    else if (Math.round(backData['Pronunciation Score']) <= 50) {setPronunColor("#d93b18");} //Yellow
-    else {setPronunColor("#317256");} //Green
-
-    if (Math.round(backData['Completeness Score']) <= 30) {setCompColor("#8a0022");}
-    else if (Math.round(backData['Completeness Score']) <= 50) {setCompColor("#f26513");}
-    else {setCompColor("#398564");}
-
-    if (Math.round(backData['Fluency Score']) <= 30) {setFluencyColor("#aa002a");}
-    else if (Math.round(backData['Fluency Score']) <= 50) {setFluencyColor("#f28f16");}
-    else {setFluencyColor("#419873");}
-
-    if (Math.round(backData['Prosody Score']) <= 30) {setProsodyColor("#bb002e");}
-    else if (Math.round(backData['Prosody Score']) <= 50) {setProsodyColor("#f2b035");}
-    else {setProsodyColor("#49ab81");}
-
-  }, []);            
+  const headerProS= (props) => (<Text {...props} style={{backgroundColor: prosodyColor, textAlign:'center'}}>{backData['Prosody Score']}</Text>);      
 
   return (
     <>
@@ -167,21 +168,20 @@ export const Analyze = ({route}) => {
             </Layout>
 
             <Layout style={{flexDirection:'row', alignItems:'center'}}>
+              
               <Layout><Card style={{width: 15, height: 15, backgroundColor: '#49ab81'}}></Card></Layout>
-              <Text style={{marginRight: '5%'}}>61 ~ 100 </Text>
+              <Text style={{marginRight: '8%'}}>100 ~ 61 </Text>
               <Layout><Card style={{width: 15, height: 15, backgroundColor: '#f2b035'}}></Card></Layout>
-              <Text style={{marginRight: '8%'}}>31 ~ 60 </Text>
+              <Text style={{marginRight: '8%'}}>60 ~ 31 </Text>
               <Layout><Card style={{width: 15, height: 15, backgroundColor: '#bb002e'}}></Card></Layout>
-              <Text>0 ~ 30 </Text>
+              <Text>30 ~ 0 </Text>
             </Layout>
-            <Layout><Text category='h2'>Sentence Evaluation</Text></Layout>
-            <Layout>
-              
-              
+            <Layout style={{marginBottom: '3%'}}><Text category='h2'>Sentence Evaluation</Text></Layout>
+            <Layout>    
               <Text>{highlightMistakes(searchVal, backDataMistakes)}</Text>
-
+              
               {selectedWord && !isCardClicked && (
-                <Card style={{}} onPress={() => setIsCardClicked(true)}>
+                <Card onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/>
                   <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>

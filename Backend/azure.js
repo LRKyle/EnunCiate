@@ -21,6 +21,7 @@ let data = {};
 var errArr = {
     index: [],
     word: [],
+    indexScore: [],
     accuracyScore: [],
     errorType: []
 };
@@ -54,6 +55,7 @@ function main(refText, lang, audioFile) {
         console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
+            errArr['indexScore'].push(word.PronunciationAssessment.AccuracyScore);
             if (word.PronunciationAssessment.ErrorType != "None") {
                 errArr['index'].push(idx + 1);
                 errArr['word'].push(word.Word);
@@ -94,6 +96,7 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
     errArr = {
         index: [],
         word: [],
+        indexScore: [],
         accuracyScore: [],
         errorType: []
     };
