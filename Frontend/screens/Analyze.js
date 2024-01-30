@@ -17,6 +17,11 @@ export const Analyze = ({route}) => {
 
   const [isCardClicked, setIsCardClicked] = useState(false)
 
+  const [pronunColor, setPronunColor] = useState('#cc0032')
+  const [compColor, setCompColor] = useState('#167d61')
+  const [fluencyColor, setFluencyColor] = useState('#16A085')
+  const [prosodyColor, setProsodyColor] = useState('#08b683')
+
   const [selectedWord, setSelectedWord] = useState(null);
   const [backDataMistakes, setBackDataMistakes] = useState([]);
   
@@ -32,8 +37,9 @@ export const Analyze = ({route}) => {
     })
   }, []);
 
+  
+
   function highlightMistakes(sentence, mistakes) {
-    
     sentence = sentence.toLowerCase();//The problem is that the cases aren't matching up so Omissions fall through the cracks
     checkMistakes = mistakes.map((word) => word.toLowerCase());
     return sentence.split(' ').map((word, index) => {
@@ -73,22 +79,43 @@ export const Analyze = ({route}) => {
   const headerFS = (props) => (<Text {...props} style={{backgroundColor: '#16A085', textAlign:'center'}}>{backData['Fluency Score']}</Text>);
   const headerProS= (props) => (<Text {...props} style={{backgroundColor: '#08b683', textAlign:'center'}}>{backData['Prosody Score']}</Text>);
   
+  
+  useEffect(() => {
+    if (Math.round(backData['Pronunciation Score']) <= 30) {setPronunColor("#7a001e");} //Red
+    else if (Math.round(backData['Pronunciation Score']) <= 50) {setPronunColor("#d93b18");} //Yellow
+    else {setPronunColor("#317256");} //Green
+
+    if (Math.round(backData['Completeness Score']) <= 30) {setCompColor("#8a0022");}
+    else if (Math.round(backData['Completeness Score']) <= 50) {setCompColor("#f26513");}
+    else {setCompColor("#398564");}
+
+    if (Math.round(backData['Fluency Score']) <= 30) {setFluencyColor("#aa002a");}
+    else if (Math.round(backData['Fluency Score']) <= 50) {setFluencyColor("#f28f16");}
+    else {setFluencyColor("#419873");}
+
+    if (Math.round(backData['Prosody Score']) <= 30) {setProsodyColor("#bb002e");}
+    else if (Math.round(backData['Prosody Score']) <= 50) {setProsodyColor("#f2b035");}
+    else {setProsodyColor("#49ab81");}
+
+  }, []);            
+
   return (
     <>
       <ApplicationProvider {...eva} theme={eva.dark}>
         <Layout style={styles.container}>
             <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', }}>
+              
               <VictoryPie
                 data={pronunciationScore}
                 VictoryAnimation={VictoryAnimation}
                 innerRadius={90}
                 cornerRadius={3}
-                colorScale={['#0E6655', '#ecf0f1']}
+                colorScale={[pronunColor, '#ecf0f1']}
                 width={300}
                 height={300}
                 padding={30}
                 labels={() => null}
-                style={{ data: { strokeWidth: 3 } }}
+                
               />
             </Layout>  
             <Layout style={{position: 'absolute',  backgroundColor: 'rgba(0, 0, 0, 0)', borderWidth: 20, borderColor: 'rgba(0, 0, 0, 0)'}}>
@@ -96,7 +123,7 @@ export const Analyze = ({route}) => {
                 data={completenessScore}
                 innerRadius={80}
                 cornerRadius={2}
-                colorScale={['#167d61', '#ecf0f1']}
+                colorScale={[compColor, '#ecf0f1']}
                 width={260}
                 height={260}
                 padding={30}
@@ -108,7 +135,7 @@ export const Analyze = ({route}) => {
                 data={fluencyScore}
                 innerRadius={60}
                 cornerRadius={2}
-                colorScale={['#16A085', '#ecf0f1']}
+                colorScale={[fluencyColor, '#ecf0f1']}
                 width={220}
                 height={220}
                 padding={30}
@@ -120,7 +147,7 @@ export const Analyze = ({route}) => {
                 data={prosodyScore}
                 innerRadius={60}
                 cornerRadius={2}
-                colorScale={['#08b683', '#ecf0f1']}
+                colorScale={[prosodyColor, '#ecf0f1']}
                 width={150}
                 height={150}
                 padding={30}

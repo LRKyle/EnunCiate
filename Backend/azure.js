@@ -61,6 +61,7 @@ function main(refText, lang, audioFile) {
             }
         });
         reco.close();
+        //console.log(pronunciation_result.detailResult.Words)
         
         data = {
             "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
