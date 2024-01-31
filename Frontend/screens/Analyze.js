@@ -66,15 +66,19 @@ export const Analyze = ({route}) => {
         return (
           <Text key={index} style={{color: 'red', fontSize: 20, lineHeight: 30}} category='h6' onPress={() => {setSelectedWord(word); setIsCardClicked(false)}}>
             {word} 
-            <Text style={{fontSize: 11, lineHeight: 24}}>
-              {backData['errDetails']['indexScore'][index] + " "}
-            </Text>
+            <Text style={{fontSize: 11, lineHeight: 24}}>{backData['errDetails']['indexScore'][index] + " "}</Text>
           </Text>
         );
       } 
       else {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
-        return <Text key={index} category='h6'>{word + " "}</Text>;}//The formating previously broke the code so if it breaks again, this is the problem, the original format is at the bottom
+        return (
+        <Text key={index} category='h6'>
+          {word}
+          <Text style={{fontSize: 11, lineHeight: 24}}>{backData['errDetails']['indexScore'][index] + "  "}</Text>
+        </Text>
+        );
+      }
     });
   }
 
@@ -185,7 +189,7 @@ export const Analyze = ({route}) => {
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/>
                   <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
-                  <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
+                  <Text category='s1'>Accuracy Score: {backData['errDetails']['indexScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
                 </Card>
               )}
             </Layout>
