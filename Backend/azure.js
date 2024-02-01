@@ -19,8 +19,8 @@ let data = {};
 //Make a BIGGER array to store the errArr data and sort it by date for the history feature
 
 var errArr = {
-    index: [],
     mistakes: [],
+    //phonemes: [],
     accuracyScore: [],
     errorType: []
 };
@@ -58,13 +58,15 @@ function main(refText, lang, audioFile, res) {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
 
             if (word.PronunciationAssessment.ErrorType != "None") {
-                errArr['index'].push(idx + 1);
                 errArr['mistakes'].push(word.Word);           
             }
+            //errArr['phonemes'].push(word.Phonemes);
             errArr['errorType'].push(word.PronunciationAssessment.ErrorType);      
             errArr['accuracyScore'].push(word.PronunciationAssessment.AccuracyScore);
         });
         reco.close();
+        
+        //console.log(pronunciation_result.detailResult, "confus")
         
         data = {
             "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
@@ -94,8 +96,8 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
     const outputPath = req.file.path + '.wav'
 
     errArr = {
-        index: [],
         mistakes: [],
+        //phonemes: [],
         accuracyScore: [],
         errorType: []
     };
@@ -126,7 +128,7 @@ function delUpload(){
 }
 
 app.get('/api', (req, res) => {
-    console.log(data, "respect the hero!")
+    console.log(data)
     res.json(data);
     delUpload(); 
 });

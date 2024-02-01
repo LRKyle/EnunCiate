@@ -1,7 +1,7 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
-import {ApplicationProvider, Card, Button, Layout, Text, Divider} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Layout, Text, Divider} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
 
@@ -71,7 +71,7 @@ export const Analyze = ({route}) => {
       if (checkMistakes.includes(word)) {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
-          <Text key={index} style={{color: 'red', fontSize: 20, lineHeight: 30}} category='h6' onPress={() => {setSelectedWord(word); setSelectedIndex(index); setIsCardClicked(false)}}>
+          <Text key={index} style={{color: 'red'}} category='h6' onPress={() => {setSelectedWord(word); setSelectedIndex(index); setIsCardClicked(false)}}>
             {word} 
             <Text style={{fontSize: 11, lineHeight: 24}}>{accuracyArr[index] + " "}</Text>
           </Text>
