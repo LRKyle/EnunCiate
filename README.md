@@ -1,6 +1,5 @@
 # To-do
-- Display data on the Results page 
-- Get the backend to run automatically upon opening the app 
+- ~~Display data on the Results page~~
 - ~~Add a loading page inbetween the Input and Results page~~
 - Add a way to see the previous pronunciation of a specific word and all the pronunciations within the langauge
 - Use Firebase or Azure to add accounts so people can keep their data seperate
