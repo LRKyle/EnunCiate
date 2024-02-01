@@ -26,7 +26,7 @@ var errArr = {
     errorType: []
 };
 
-function main(refText, lang, audioFile) {
+function main(refText, lang, audioFile, res) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
     var reference_text = refText
@@ -44,6 +44,8 @@ function main(refText, lang, audioFile) {
     pronunciationAssessmentConfig.applyTo(reco);
 
     function onRecognizedResult(result) {
+        if (result.text == undefined) {console.log('sweet life'); res.sendStatus(500);}
+        else {console.log("ape shit crazy"); res.sendStatus(200);}
         console.log("pronunciation assessment for: ", result.text);
         var pronunciation_result = sdk.PronunciationAssessmentResult.fromResult(result);
         console.log(" Overall Accuracy score: ", pronunciation_result.accuracyScore, '\n',
@@ -103,15 +105,14 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
     try {
         await convertToWav(inputPath, outputPath);
         console.log(outputPath)
-        main(req.body.searchVal, req.body.lang, outputPath);
-        if (result) {res.sendStatus(200);} 
-        else {res.sendStatus(500);}
+        main(req.body.searchVal, req.body.lang, outputPath, res);
+        //res.sendStatus(200);
     } 
     catch (error) {console.error('Failed to convert file to WAV format', error); res.sendStatus(409);}
     //fs.unlink(inputPath, (err) => {if (err) throw err;}); // In order to get rid of the data file and keep the audio ver
 })
 
-app.listen(3000, () => {console.log('Server is running on port 3000');});
+app.listen(3000, () => {console.log('Server is running on port 3000')});
 
 function delUpload(){
     const directory = 'uploads';
