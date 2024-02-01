@@ -23,16 +23,21 @@ export const Analyze = ({route}) => {
   const [prosodyColor, setProsodyColor] = useState('#08b683')
 
   const [selectedWord, setSelectedWord] = useState(null);
-  const [backDataMistakes, setBackDataMistakes] = useState([]);
-  const [backDataIndex, setBackDataIndex] = useState([])
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [mistakesArr, setMistakesArr] = useState([]);
+  const [accuracyArr, setAccuracyArr] = useState([]);
+  const [errArr, setErrArr] = useState([])
   
   useEffect(() => {
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
     .then((data) => {
       setBackData(data)
-      setBackDataMistakes(data['errDetails']['word'])
-      setBackDataIndex(data['errDetails']['indexScore'])
+      setMistakesArr(data['errDetails']['mistakes'])
+      
+      for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
+      setAccuracyArr(data['errDetails']['accuracyScore'])
+      setErrArr(data['errDetails']['errorType'])
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
@@ -66,9 +71,9 @@ export const Analyze = ({route}) => {
       if (checkMistakes.includes(word)) {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
-          <Text key={index} style={{color: 'red', fontSize: 20, lineHeight: 30}} category='h6' onPress={() => {setSelectedWord(word); setIsCardClicked(false)}}>
+          <Text key={index} style={{color: 'red', fontSize: 20, lineHeight: 30}} category='h6' onPress={() => {setSelectedWord(word); setSelectedIndex(index); setIsCardClicked(false)}}>
             {word} 
-            <Text style={{fontSize: 11, lineHeight: 24}}>{backDataIndex[index] + " "}</Text>
+            <Text style={{fontSize: 11, lineHeight: 24}}>{accuracyArr[index] + " "}</Text>
           </Text>
         );
       } 
@@ -76,8 +81,8 @@ export const Analyze = ({route}) => {
         if (index == 0) {word = word[0].toUpperCase() + word.slice(1)}
         return (
         <Text key={index} category='h6'>
-          {word}
-          <Text style={{fontSize: 11, lineHeight: 24}}>{backDataIndex[index] + "  "}</Text>
+          {word} 
+          <Text style={{fontSize: 11, lineHeight: 24}}>{accuracyArr[index] + "  "}</Text>
         </Text>
         );
       }
@@ -184,14 +189,14 @@ export const Analyze = ({route}) => {
             </Layout>
             <Layout style={{marginBottom: '3%'}}><Text category='h2'>Sentence Evaluation</Text></Layout>
             <Layout>    
-              <Text>{highlightMistakes(searchVal, backDataMistakes)}</Text>
+              <Text>{highlightMistakes(searchVal, mistakesArr)}</Text>
               
               {selectedWord && !isCardClicked && (
                 <Card onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/> 
-                  <Text>{backData['errDetails']['errorType'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
-                  <Text category='s1'>Accuracy Score: {backData['errDetails']['accuracyScore'][backData['errDetails']['word'].indexOf(selectedWord)]}</Text>
+                  <Text>{errArr[selectedIndex]}</Text>
+                  <Text category='s1'>Accuracy Score: {accuracyArr[selectedIndex]}</Text>
                 </Card>
               )}
             </Layout>

@@ -20,8 +20,7 @@ let data = {};
 
 var errArr = {
     index: [],
-    word: [],
-    indexScore: [],
+    mistakes: [],
     accuracyScore: [],
     errorType: []
 };
@@ -44,8 +43,8 @@ function main(refText, lang, audioFile, res) {
     pronunciationAssessmentConfig.applyTo(reco);
 
     function onRecognizedResult(result) {
-        if (result.text == undefined) {console.log('sweet life'); res.sendStatus(500);}
-        else {console.log("ape shit crazy"); res.sendStatus(200);}
+        if (result.text == undefined) {res.sendStatus(500);}
+        else {res.sendStatus(200);}
         console.log("pronunciation assessment for: ", result.text);
         var pronunciation_result = sdk.PronunciationAssessmentResult.fromResult(result);
         console.log(" Overall Accuracy score: ", pronunciation_result.accuracyScore, '\n',
@@ -57,13 +56,13 @@ function main(refText, lang, audioFile, res) {
         //console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
-            errArr['indexScore'].push(word.PronunciationAssessment.AccuracyScore);
+
             if (word.PronunciationAssessment.ErrorType != "None") {
                 errArr['index'].push(idx + 1);
-                errArr['word'].push(word.Word);
-                errArr['accuracyScore'].push(word.PronunciationAssessment.AccuracyScore);
-                errArr['errorType'].push(word.PronunciationAssessment.ErrorType);                
+                errArr['mistakes'].push(word.Word);           
             }
+            errArr['errorType'].push(word.PronunciationAssessment.ErrorType);      
+            errArr['accuracyScore'].push(word.PronunciationAssessment.AccuracyScore);
         });
         reco.close();
         
@@ -96,8 +95,7 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
 
     errArr = {
         index: [],
-        word: [],
-        indexScore: [],
+        mistakes: [],
         accuracyScore: [],
         errorType: []
     };
