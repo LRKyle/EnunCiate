@@ -5,7 +5,7 @@
 - Use Firebase or Azure to add accounts so people can keep their data seperate
 - Make it so you can swipe down from the top header to return to the Input page and swipe left(from the Input page) to see the history of each language and finally, swipe down while in the Results page to see everytime that specific word has been pronounced and their results of them. 
 
-# MultiPurpose
+# EnunCiate
 This is an app made around the idea of a vocal dictionary. Apps like WordReference and many others focus on the easy parts of learning another language. The written portion. The spoken is usually the biggest hurdle for most people so using this app, it can help people overcome their fears and help them take the first step and get into real situations and conversations.
 
 ## Pronunciation Assessment
