@@ -13,3 +13,6 @@ This app uses Microsoft Azure's Pronunciation Assessment to analyze your pronunc
 
 ## Dialects and Regions
 This apps offers over 10+ dialects and it can seamlessly move inbetween languages aswell as saving a person's individual pronunciations seperate from other languages
+
+### Languages
+React Native, Node.js
