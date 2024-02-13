@@ -1,9 +1,12 @@
 import React from 'react';
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {FIREBASE_AUTH} from '../firebase';
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
 import * as eva from '@eva-design/eva'
 import {ApplicationProvider, Layout, Input, Text, Button, Icon, IconRegistry, Divider,} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons'
+
+
 
 
 export const Login = ({navigation}) => {
@@ -12,6 +15,32 @@ export const Login = ({navigation}) => {
     const [loading, setLoading] = React.useState(false);
     const [protectedText, setProtectedText] = React.useState(true);
     const auth = FIREBASE_AUTH
+
+    const signIn = async () => {
+        console.log('Signing in')
+        try {
+            setLoading(true);
+            await signInWithEmailAndPassword(auth, email, password);
+            
+        } catch (err) {
+            console.log(err);
+            console.log(email, " ", password, " ")
+        } finally {
+            setLoading(false);
+        }
+    }
+    
+    const signUp = async () => {
+        console.log('Signing up')
+        try {
+            setLoading(true);
+            await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    }
    
     const eye = (props) => (<TouchableWithoutFeedback onPress={() => setProtectedText(!protectedText)}><Icon {...props} fill = {protectedText ? '#8F9BB3' : '#f7faff'} name={protectedText ? 'eye-off' : 'eye'}/></TouchableWithoutFeedback>);
 
@@ -23,11 +52,9 @@ export const Login = ({navigation}) => {
                 <Text style={{color: '#f7faff', textAlign: 'center'}} category='h2'>Login</Text>
                 <Divider style={{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
                 <Input style = {styles.input} placeholder = 'Enter an email' onChangeText={emailValue => setEmail(emailValue)}/> 
-                <Input style = {styles.input} placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
-                <Layout style = {styles.captionText}>
-                    <Text style={styles.captionText} onPress={() => navigation.navigate('Search')}>Don't have an account? Sign Up (Setup the sign in page aswell)</Text>
-                </Layout>
-            
+                <Input style = {styles.input} caption="  If you don't have an account, an account will be made!" placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
+            <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signIn}>Login</Button>
+            <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signUp}>Sign Up</Button>
             </Layout>
         </ApplicationProvider>
     </>
@@ -54,15 +81,6 @@ const styles = StyleSheet.create({
         paddingBottom: 5, 
         paddingLeft: 10,
     },
-    captionText: {
-        marginLeft: '7%',
-        alignSelf: 'flex-start',
-        flexDirection: 'row',
-        fontSize: 12,
-        fontWeight: '400',
-        color: '#8F9BB3',
-    },
-    
 });
 
 /*<Button  onPress={async () => {
