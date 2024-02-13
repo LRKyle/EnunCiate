@@ -115,7 +115,7 @@ export const Analyze = ({route}) => {
     <>
       <ApplicationProvider {...eva} theme={eva.dark}>
         <Layout style={styles.container}>
-            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginHorizontal: '37%'}}>
+            <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)', marginHorizontal: '37.3%'}}>
               
               <VictoryPie
                 data={pronunciationScore}
@@ -168,7 +168,7 @@ export const Analyze = ({route}) => {
               
             </Layout>
             <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
-              <Text style={{marginTop: '41%',  marginLeft: '67%'}} category='h1'>{backData['Overall Accuracy Score']}</Text>
+              <Text style={{marginTop: '40%',  marginLeft: '63%'}} category='h1'>{backData['Overall Accuracy Score']}</Text>
             </Layout>
             
             <Layout style={{marginRight: '64%'}}>

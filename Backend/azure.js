@@ -25,6 +25,8 @@ var errArr = {
     errorType: []
 };
 
+//var errLog  = {}
+
 function main(refText, lang, audioFile, res) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
@@ -67,7 +69,6 @@ function main(refText, lang, audioFile, res) {
         reco.close();
         
         //console.log(pronunciation_result.detailResult, "confus")
-        
         data = {
             "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
             "Pronunciation Score": [pronunciation_result.pronunciationScore], 
@@ -76,6 +77,8 @@ function main(refText, lang, audioFile, res) {
             "Prosody Score": [pronunciation_result.prosodyScore], 
             "errDetails": errArr
         }
+        console.log(req.body.searchVal, "searchVal")
+        
     }
     reco.recognizeOnceAsync(function (successfulResult) {onRecognizedResult(successfulResult);})
 }
@@ -97,7 +100,6 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
 
     errArr = {
         mistakes: [],
-        //phonemes: [],
         accuracyScore: [],
         errorType: []
     };
@@ -124,14 +126,19 @@ function delUpload(){
             if (err) throw err;
           });
         }
-      });
+    });
 }
 
 app.get('/api', (req, res) => {
-    console.log(data)
+    console.log(data, "respect the hero!")
+    //errLog.push(data);
     res.json(data);
     delUpload(); 
+    //console.log("Start", errLog, "End")
 });
+
+
+
 /*if (word.PronunciationAssessment.ErrorType != sdk.PronunciationAssessmentErrorType.None) {
                 errArr.
             } 
