@@ -3,7 +3,7 @@ import * as eva from '@eva-design/eva'
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {Audio} from 'expo-av'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Modal} from '@ui-kitten/components'
-import { EvaIconsPack } from '@ui-kitten/eva-icons'
+import {EvaIconsPack} from '@ui-kitten/eva-icons'
 import ky from 'ky'
 
 const langSetting = [
@@ -33,9 +33,7 @@ export const Search = ({navigation}) => {
   const micOff = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
   const micOn = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
   
-  sound.setOnPlaybackStatusUpdate((status) => {
-    if (status.didJustFinish){stopPlayback()}
-  });
+  sound.setOnPlaybackStatusUpdate((status) => {if (status.didJustFinish){stopPlayback()}});
   
   async function startRecording() {
     try {
@@ -99,7 +97,7 @@ export const Search = ({navigation}) => {
             <Divider/>
           </Layout>
           <Layout style={styles.row}>
-            <Input style ={styles.input} placeholder = 'Enter a word!' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
+            <Input style={styles.input} placeholder = 'Enter a word!' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
           </Layout>
           <Select
             style={{width: '45%', margin: 5}}
@@ -120,7 +118,7 @@ export const Search = ({navigation}) => {
             <Layout>
               <Text style={{textAlign: 'center',}}category='h2'>Error!</Text> 
               <Divider/>
-              <Text style={{textAlign: 'center',marginTop:'2%'}}> Please try again when you have a{"\n"}stable internet connection.</Text>
+              <Text style={{textAlign: 'center', marginTop:'2%'}}> Please try again when you have a{"\n"}stable internet connection.</Text>
               <Divider/>
               <Button status='danger' appearance='outline' onPress={() => setVisible(false)}>OK</Button>
             </Layout>
