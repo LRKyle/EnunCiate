@@ -5,6 +5,7 @@ import {Audio} from 'expo-av'
 import {ApplicationProvider, Input, Layout, Text, Select, SelectItem, SelectGroup, Divider, Button, Icon, IconRegistry, Spinner, Modal} from '@ui-kitten/components'
 import {EvaIconsPack} from '@ui-kitten/eva-icons'
 import ky from 'ky'
+import { Analyze } from './Analyze'
 
 const langSetting = [
   {
@@ -93,8 +94,8 @@ export const Search = ({navigation}) => {
         <Layout style={styles.container}>
           <Layout>
             <Text style={{color: '#f7faff', textAlign: 'center'}} category='h2'>Language Assessment</Text>
-            <Text style={{textAlign: 'center', marginBottom: '5%'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
-            <Divider style={{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
+            <Text style={{textAlign: 'center', marginBottom: '3%'}}>Enter a word or sentence that you would like to pronunce then click the mic and pronunce it!</Text>
+            <Divider style={{backgroundColor: '#00E095', height: 1}}/>
           </Layout>
           <Layout style={styles.row}>
             <Input style={styles.input} placeholder = 'Enter a word!' value={value} accessoryRight={recording ? micOn : micOff} onChangeText={nextValue => setValue(nextValue)}/> 
