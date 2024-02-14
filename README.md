@@ -1,8 +1,8 @@
 # To-do
 - ~~Display data on the Results page~~
 - ~~Add a loading page inbetween the Input and Results page~~
+- ~~Use Firebase or Azure to add auth~~
 - Add a way to see the previous pronunciation of a specific word and all the pronunciations within the langauge
-- Use Firebase or Azure to add accounts so people can keep their data seperate
 - Make it so you can swipe down from the top header to return to the Input page and swipe left(from the Input page) to see the history of each language and finally, swipe down while in the Results page to see everytime that specific word has been pronounced and their results of them. 
 
 # EnunCiate
