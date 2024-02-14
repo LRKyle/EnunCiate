@@ -21,7 +21,6 @@ export const Login = ({navigation}) => {
         try {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
-            
         } catch (err) {
             console.log(err);
             console.log(email, " ", password, " ")
@@ -47,15 +46,17 @@ export const Login = ({navigation}) => {
     return (
     <>
         <IconRegistry icons={EvaIconsPack} />
+
         <ApplicationProvider {...eva} theme = {eva.dark}>
-            <Layout style={styles.container}>
-                <Text style={{color: '#f7faff', textAlign: 'center'}} category='h2'>Login</Text>
-                <Divider style={{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
-                <Input style = {styles.input} placeholder = 'Enter an email' onChangeText={emailValue => setEmail(emailValue)}/> 
-                <Input style = {styles.input} caption="  If you don't have an account, an account will be made!" placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
-            <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signIn}>Login</Button>
-            <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signUp}>Sign Up</Button>
-            </Layout>
+            
+                <Layout style={styles.container}>
+                    <Text style={{color: '#f7faff', textAlign: 'center'}} category='h2'>Registration</Text>
+                    <Divider style={{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
+                    <Input style = {styles.input} placeholder = 'Enter an email' onChangeText={emailValue => setEmail(emailValue)}/> 
+                    <Input style = {styles.input} caption="  If you don't have an account, an account will be made!" placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
+                    <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signIn}>Login</Button>
+                    <Button style={{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signUp}>Sign Up</Button>
+                </Layout>
         </ApplicationProvider>
     </>
     );
