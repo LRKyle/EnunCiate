@@ -3,7 +3,7 @@ import * as eva from '@eva-design/eva'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator} from '@react-navigation/drawer'
 import {NavigationContainer} from '@react-navigation/native'
-import {ApplicationProvider, Layout, Text} from '@ui-kitten/components'
+import {ApplicationProvider, Layout, Text, Divider, Icon, IconElement} from '@ui-kitten/components'
 //Screens Imports
 import {Search} from './screens/Search'
 import {Analyze} from './screens/Analyze'
@@ -11,14 +11,28 @@ import {Login} from './screens/Login'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
+
 function CustomDrawerContent(props) {
-  //Assuming we are not logged in, show a screen that prompts the user to login, else show 
+  //Assuming we are not logged in, show a screen that prompts the user to login, else shows a list of previously used words
+  //When you are in the Analyze screen, it shows the history of scores analyzed //justifyContent: 'center', 
+
+  //Find a way to navigate betweens screens using Drawer.Navigator
   return (
     <>
       <ApplicationProvider {...eva} theme = {eva.dark}>
-        <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Drawer Content</Text>
+        <Layout style={{flex: 1, alignItems: 'center'}}> 
+        <Text style={{marginTop: '15%', textAlign:'center'}} category='h3'>Assessment {'\n'} History</Text>
+        <Divider style= {{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
         <Text>Hi Squidward</Text>
+        </Layout>
+        <Layout style={{flex: 1, alignItems: 'flex-end', justifyContent:'flex-end'}}>
+          <Layout style={{flexDirection:'row', marginBottom: '20%', marginRight: '10%'}}>
+            <Icon
+              style={{width: 32, height: 32,}}
+              fill='#00E096'
+              name='log-in'
+            />
+          </Layout>
         </Layout>
       </ApplicationProvider>
     </>

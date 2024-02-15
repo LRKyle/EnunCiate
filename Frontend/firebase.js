@@ -3,7 +3,6 @@ import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
-// Add to gitignore
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

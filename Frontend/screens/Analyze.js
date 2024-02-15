@@ -27,7 +27,9 @@ export const Analyze = ({route}) => {
   const [mistakesArr, setMistakesArr] = useState([]);
   const [accuracyArr, setAccuracyArr] = useState([]);
   const [errArr, setErrArr] = useState([])
-  
+
+  const prevData = [[]]
+
   useEffect(() => {
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
@@ -38,10 +40,17 @@ export const Analyze = ({route}) => {
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
+
+      prevData.push([backData, mistakesArr, accuracyArr])
+    })
+    .finally(() => {
+      print("Finally, this really was my Vinland Saga!")
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
     })
+
+    prevData.push(backData)
   }, []);
 
   useEffect(() => {

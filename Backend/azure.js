@@ -25,8 +25,6 @@ var errArr = {
     errorType: []
 };
 
-//var errLog  = {}
-
 function main(refText, lang, audioFile, res) {
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
@@ -131,10 +129,8 @@ function delUpload(){
 
 app.get('/api', (req, res) => {
     console.log(data, "respect the hero!")
-    //errLog.push(data);
     res.json(data);
     delUpload(); 
-    //console.log("Start", errLog, "End")
 });
 
 
