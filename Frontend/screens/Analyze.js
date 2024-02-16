@@ -41,16 +41,11 @@ export const Analyze = ({route}) => {
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
 
-      prevData.push([backData, mistakesArr, accuracyArr])
-    })
-    .finally(() => {
-      print("Finally, this really was my Vinland Saga!")
+      prevData.push([backData, mistakesArr, accuracyArr, errArr])
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
     })
-
-    prevData.push(backData)
   }, []);
 
   useEffect(() => {
