@@ -178,7 +178,7 @@ export const Analyze = ({route}) => {
               
             </Layout>
             <Layout style={{position: 'absolute', backgroundColor: 'rgba(0, 0, 0, 0)'}}>
-              <Text style={{marginTop: '40%',  marginLeft: '63%'}} category='h1'>{backData['Overall Accuracy Score']}</Text>
+              <Text style={{marginTop: '42%',  marginLeft: '66%'}} category='h1'>{backData['Overall Accuracy Score']}</Text>
             </Layout>
             
             <Layout style={{marginRight: '64%'}}>
