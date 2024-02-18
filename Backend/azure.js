@@ -20,13 +20,12 @@ let data = {};
 
 
 function main(refText, lang, audioFile, res) {
-
     var errArr = {
         mistakes: [],
         accuracyScore: [],
         errorType: []
     };
-    
+
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
     var reference_text = refText

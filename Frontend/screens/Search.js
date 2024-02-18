@@ -28,8 +28,6 @@ export const Search = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = React.useState(false);
 
-  
-  //micOff / micOn  
   const micOff = (props) => (<TouchableWithoutFeedback onPress={startRecording}><Icon {...props} fill = {'#8F9BB3'} name='mic-outline'/></TouchableWithoutFeedback>);
   const micOn = (props) => (<TouchableWithoutFeedback onPress={stopRecording}><Icon {...props} style={{ width: '30px', height: '30px' }} fill = {'#f7faff'} name='mic'/></TouchableWithoutFeedback>);
   

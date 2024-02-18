@@ -2,10 +2,10 @@ import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
 import {useIsFocused} from '@react-navigation/native'
-import {ApplicationProvider, Card, Layout, Text, Divider} from '@ui-kitten/components'
+import {ApplicationProvider, Card, Layout, Text, Divider, Spinner} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
-//import {prevData} from '../App'
+import {prevData} from '../App'
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -39,13 +39,12 @@ export const Analyze = ({route}) => {
     .then((data) => {
       setBackData(data)
       setMistakesArr(data['errDetails']['mistakes'])
-      
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
-
-      console.log(accuracyArr)
-      //prevData.push(data)
+      if (!prevData.includes([data, searchVal]) && [data, searchVal] == []) {prevData.push([data, searchVal])}
+      //console.log([data, searchVal])
+      //prevData.push([data, searchVal])
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")

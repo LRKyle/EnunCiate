@@ -12,8 +12,7 @@ import {Login} from './screens/Login'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
-
-//export var prevData = []
+export var prevData = []
 
 function CustomDrawerContent(props) {
   //Assuming we are not logged in, show a screen that prompts the user to login, else shows a list of previously used words
@@ -45,6 +44,7 @@ function CustomDrawerContent(props) {
           </Layout>
         </Layout>
       </ApplicationProvider>
+      {console.log(prevData)}
     </>
     
   );
