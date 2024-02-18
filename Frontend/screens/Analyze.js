@@ -42,7 +42,7 @@ export const Analyze = ({route}) => {
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
-      if (!prevData.includes([data, searchVal]) && [data, searchVal] == []) {prevData.push([data, searchVal])}
+      if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {prevData.push([data, searchVal])}
       //console.log([data, searchVal])
       //prevData.push([data, searchVal])
     })
