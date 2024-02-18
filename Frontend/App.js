@@ -1,4 +1,5 @@
 import React from 'react'
+import {Button} from 'react-native'
 import * as eva from '@eva-design/eva'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer'
@@ -11,6 +12,8 @@ import {Login} from './screens/Login'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
+
+//export var prevData = []
 
 function CustomDrawerContent(props) {
   //Assuming we are not logged in, show a screen that prompts the user to login, else shows a list of previously used words
@@ -28,15 +31,8 @@ function CustomDrawerContent(props) {
           style={{width: 32, height: 32,}}
           fill='#00E096'
           name='star'
-          onPress={() => props.navigation.navigate('Search')}
-        />
-
-        <Icon
-          style={{width: 32, height: 32,}}
-          fill='#00E096'
-          name='star-outline'
-          onPress={() => props.navigation.navigate('Analyze')}
-        />        
+          onPress={() => props.navigation.goBack()}
+        />       
         </Layout>
         <Layout style={{flex: 1, alignItems: 'flex-end', justifyContent:'flex-end'}}>
           <Layout style={{flexDirection:'row', marginBottom: '20%', marginRight: '10%'}}>
@@ -50,6 +46,7 @@ function CustomDrawerContent(props) {
         </Layout>
       </ApplicationProvider>
     </>
+    
   );
 }
 
@@ -57,9 +54,9 @@ export default function App() {
   return(
     <NavigationContainer>
       <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none',}}/>
+        <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none',}}/>
         <Stack.Screen name="Login" component={Login} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'},  headerTintColor: 'white', animation: 'none'}} />
-        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}} options={{headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'},  headerTintColor: 'white', animation: 'none'}}/>
+        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}} options={({ navigation }) => ({ headerStyle: {backgroundColor: '#1b2137'}, title: "Results",  headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none', headerRight: () => (<Button onPress={() => navigation.goBack()} title="Go to Search" color="black"/>),})}/> 
       </Drawer.Navigator>
     </NavigationContainer>
   );

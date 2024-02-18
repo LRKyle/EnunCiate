@@ -1,9 +1,11 @@
 import React, {useState, useEffect}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
+import {useIsFocused} from '@react-navigation/native'
 import {ApplicationProvider, Card, Layout, Text, Divider} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
+//import {prevData} from '../App'
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
@@ -28,9 +30,10 @@ export const Analyze = ({route}) => {
   const [accuracyArr, setAccuracyArr] = useState([]);
   const [errArr, setErrArr] = useState([])
 
-  const prevData = [[]]
+  const isFocused = useIsFocused();
 
   useEffect(() => {
+    if (isFocused) {
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
     .then((data) => {
@@ -41,12 +44,15 @@ export const Analyze = ({route}) => {
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
 
-      prevData.push([backData, mistakesArr, accuracyArr, errArr])
+      console.log(accuracyArr)
+      //prevData.push(data)
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
     })
-  }, []);
+    }
+  }, [isFocused]);
+
 
   useEffect(() => {
     if (Math.round(backData['Pronunciation Score']) <= 30) {setPronunColor("#7a001e");} //Red
@@ -86,7 +92,7 @@ export const Analyze = ({route}) => {
         return (
         <Text key={index} category='h6'>
           {word} 
-          <Text style={{fontSize: 11, lineHeight: 24}}>{accuracyArr[index] + "  "}</Text>
+          <Text style={{fontSize: 11, lineHeight: 24}}>{accuracyArr[index] + " "}</Text>
         </Text>
         );
       }

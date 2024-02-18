@@ -16,16 +16,17 @@ app.use(express.json({limit: '50mb'}));
 const subscriptionKey = process.env.AZUREKEY;
 const serviceRegion = process.env.AZUREREGION;
 let data = {};
-//Make a BIGGER array to store the errArr data and sort it by date for the history feature
 
-var errArr = {
-    mistakes: [],
-    //phonemes: [],
-    accuracyScore: [],
-    errorType: []
-};
+
 
 function main(refText, lang, audioFile, res) {
+
+    var errArr = {
+        mistakes: [],
+        accuracyScore: [],
+        errorType: []
+    };
+    
     var audioConfig = sdk.AudioConfig.fromWavFileInput(fs.readFileSync(audioFile));
     var speechConfig = sdk.SpeechConfig.fromSubscription(subscriptionKey, serviceRegion);
     var reference_text = refText
@@ -60,7 +61,6 @@ function main(refText, lang, audioFile, res) {
             if (word.PronunciationAssessment.ErrorType != "None") {
                 errArr['mistakes'].push(word.Word);           
             }
-            //errArr['phonemes'].push(word.Phonemes);
             errArr['errorType'].push(word.PronunciationAssessment.ErrorType);      
             errArr['accuracyScore'].push(word.PronunciationAssessment.AccuracyScore);
         });
@@ -96,12 +96,6 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
     const inputPath = req.file.path;
     const outputPath = req.file.path + '.wav'
 
-    errArr = {
-        mistakes: [],
-        accuracyScore: [],
-        errorType: []
-    };
-
     try {
         await convertToWav(inputPath, outputPath);
         console.log(outputPath)
@@ -128,10 +122,12 @@ function delUpload(){
 }
 
 app.get('/api', (req, res) => {
-    console.log(data, "respect the hero!")
+    console.log(`Received ${req.method} request for ${req.url}`);
     res.json(data);
+    console.log(data['errDetails']['accuracyScore'], "data")
     delUpload(); 
 });
+
 
 
 
