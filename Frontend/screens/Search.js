@@ -74,7 +74,7 @@ export const Search = ({navigation}) => {
     fd.append("searchVal", value);
     fd.append("lang", lang);
      
-    try{await ky.post(process.env.REACT_APP_AUDIO, {body: fd}); setIsLoading(false); navigation.navigate('Analyze', {searchVal: value, lang: lang});}
+    try{await ky.post(process.env.REACT_APP_AUDIO, {body: fd}); setIsLoading(false); navigation.navigate('Analyze', {searchVal: value, lang: lang, prev: false, prevHolder: []});}
     catch(error){setIsLoading(false); setVisible(true);}
   }
 

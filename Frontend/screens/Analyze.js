@@ -14,7 +14,7 @@ const chartConfig = {
 };
 
 export const Analyze = ({route}) => {
-  const {searchVal, langVal} = route.params
+  const {searchVal, langVal, prev, prevHolder} = route.params
   const [backData, setBackData] = useState([{}]);
 
   const [isCardClicked, setIsCardClicked] = useState(false)
@@ -33,7 +33,8 @@ export const Analyze = ({route}) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && !prev) {
+    console.log("Lift yourself")
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
     .then((data) => {
@@ -43,12 +44,21 @@ export const Analyze = ({route}) => {
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
       if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {prevData.push([data, searchVal])}
+      console.log("On ya feet!")
       //console.log([data, searchVal])
       //prevData.push([data, searchVal])
     })
     .catch((error)=> {
       console.error(error, "sda sdasd a")
     })
+    }
+    else if (isFocused && prev) { //The concept works! 
+      setBackData(prevData[0][0])
+      console.log(prevData[0][0]['errDetails']['mistakes'])
+      setMistakesArr(prevData[0][0]['errDetails']['mistakes'])
+      for (var i = 0; i < prevData[0][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[0][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[0][0]['errDetails']['accuracyScore'][i] = 0}}
+      setAccuracyArr(prevData[0][0]['errDetails']['accuracyScore'])
+      setErrArr(prevData[0][0]['errDetails']['errorType'])
     }
   }, [isFocused]);
 

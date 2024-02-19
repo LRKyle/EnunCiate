@@ -17,8 +17,9 @@ export var prevData = []
 function CustomDrawerContent(props) {
   //Assuming we are not logged in, show a screen that prompts the user to login, else shows a list of previously used words
   //When you are in the Analyze screen, it shows the history of scores analyzed //justifyContent: 'center', 
-  //Figure out a way to recieve the data from Analyze.js 
   //Note: Drawer updates everytime it is opened
+  //Have more args in the function to pass the data the prevData and use the prevData to display the history and use the prev arg to show if you use new data or the prevData
+  //It might be better to just modify prevData so works in the place of prev arg
   return (
     <>
       <ApplicationProvider {...eva} theme = {eva.dark}>
@@ -31,7 +32,13 @@ function CustomDrawerContent(props) {
           fill='#00E096'
           name='star'
           onPress={() => props.navigation.goBack()}
-        />       
+        />     
+        <Icon
+          style={{width: 32, height: 32,}}
+          fill='#00E096'
+          name='star'
+          onPress={() => props.navigation.navigate('Analyze', {searchVal: prevData[0][1], langVal: "Placeholder", prev: true, prevHolder: prevData[0][0]})}
+        />        
         </Layout>
         <Layout style={{flex: 1, alignItems: 'flex-end', justifyContent:'flex-end'}}>
           <Layout style={{flexDirection:'row', marginBottom: '20%', marginRight: '10%'}}>
@@ -56,7 +63,7 @@ export default function App() {
       <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
         <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none',}}/>
         <Stack.Screen name="Login" component={Login} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'},  headerTintColor: 'white', animation: 'none'}} />
-        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder"}} options={({ navigation }) => ({ headerStyle: {backgroundColor: '#1b2137'}, title: "Results",  headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none', headerRight: () => (<Button onPress={() => navigation.goBack()} title="Go to Search" color="black"/>),})}/> 
+        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder", prev: false, prevHolder: []}} options={({ navigation }) => ({ headerStyle: {backgroundColor: '#1b2137'}, title: "Results",  headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none', headerRight: () => (<Button onPress={() => navigation.goBack()} title="Go to Search" color="black"/>),})}/> 
       </Drawer.Navigator>
     </NavigationContainer>
   );
