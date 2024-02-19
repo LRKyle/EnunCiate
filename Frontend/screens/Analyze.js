@@ -54,12 +54,13 @@ export const Analyze = ({route}) => {
     }
     else if (isFocused && prev != -1) { //The concept works! 
 
-      console.log(prevData[prev])
-      setBackData(prevData[prev])
-      /*setMistakesArr(prevData[prev][0]['errDetails']['mistakes'])
+      console.log(prevData[prev], "YEeeeeHaw")
+      setBackData(prevData[prev][0])
+      console.log(backData, "Cowboy")
+      setMistakesArr(prevData[prev][0]['errDetails']['mistakes'])
       for (var i = 0; i < prevData[prev][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[prev][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[prev][0]['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(prevData[prev][0]['errDetails']['accuracyScore'])
-      setErrArr(prevData[prev][0]['errDetails']['errorType'])*/
+      setErrArr(prevData[prev][0]['errDetails']['errorType'])
     }
   }, [isFocused]);
 

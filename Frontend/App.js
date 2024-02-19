@@ -14,18 +14,16 @@ const Stack = createNativeStackNavigator();
 
 export var prevData = []//[["place", 'holder'], ['once', 'again']]
 
-function listPrevData() {
+function listPrevData(props) {
   //console.log(prevData)
   return prevData.map((item, index) => (
-    <Card key={index} style={{width: '85%', marginTop: 5, marginBottom: 5, marginLeft: 15,}} onPress={navigateToAnalyze(item, index)}>
-      {console.log(item[1])}
+    <Card key={index} style={{width: '85%', marginTop: 5, marginBottom: 5, marginLeft: 15,}} onPress={() => props.navigation.navigate('Analyze', {searchVal: item[1], langVal: "Placeholder", prev: index, prevHolder: item[0]})}>
       <Text style={{color: 'white'}} category='h4'>{item[1].charAt(0).toUpperCase() + item[1].slice(1)}</Text>
       <Divider style= {{backgroundColor: '#00E096', height: 1, marginTop: 10, marginBottom: 10}}/>
       <Text>Pronunciation Score: {item[0]['Pronunciation Score']}</Text>
       <Text>Completeness Score: {item[0]['Completeness Score']}</Text>
       <Text>Fluency Score: {item[0]['Fluency Score']}</Text>
       <Text>Prosody Score: {item[0]['Prosody Score']}</Text>
-      {console.log(item[0], "is here")}
     </Card>
   ));
 }
@@ -38,9 +36,6 @@ function CustomDrawerContent(props) {
   //Have more args in the function to pass the data the prevData and use the prevData to display the history and use the prev arg to show if you use new data or the prevData
   //It might be better to just modify prevData so works in the place of prev arg
 
-  function navigateToAnalyze(item, index) {
-    props.navigation.navigate('Analyze', {searchVal: item[1], langVal: "Placeholder", prev: index, prevHolder: item[0]})
-  }
   return (
     <>
       <ApplicationProvider {...eva} theme = {eva.dark}>
@@ -60,7 +55,7 @@ function CustomDrawerContent(props) {
           name='star'
           onPress={() => props.navigation.navigate('Analyze', {searchVal: prevData[0][1], langVal: "Placeholder", prev: -1, prevHolder: prevData[0][0]})}
         />     
-        <ScrollView style={{width: '90%', height: '65%', alignContent: 'center'}}>{listPrevData()}</ScrollView>
+        <ScrollView style={{width: '90%', height: '65%', alignContent: 'center'}}>{listPrevData(props)}</ScrollView>
         </Layout>
         <Layout style={{flex: 1, alignItems: 'flex-end', justifyContent:'flex-end'}}>
           <Layout style={{flexDirection:'row', marginBottom: '20%', marginRight: '10%'}}>
