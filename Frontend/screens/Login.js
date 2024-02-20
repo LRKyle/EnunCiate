@@ -1,20 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react'
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native'
 import {FIREBASE_AUTH} from '../firebase';
 import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
 import * as eva from '@eva-design/eva'
-import {ApplicationProvider, Layout, Input, Text, Button, Icon, IconRegistry, Divider,} from '@ui-kitten/components';
+import {ApplicationProvider, Layout, Input, Text, Button, Icon, IconRegistry, Divider, Modal, Spinner} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons'
 
-
-
-
-
 export const Login = ({navigation}) => {
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [loading, setLoading] = React.useState(false);
-    const [protectedText, setProtectedText] = React.useState(true);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [isLoading, setLoading] = useState(false)
+    const [protectedText, setProtectedText] = useState(true)
+    const [visible, setVisible] = useState(false)
+    const [swap, setSwap] = useState(false)
+
+    const [err, setErr] = useState('An error occurred, please try again later!');
     const auth = FIREBASE_AUTH
 
     const signIn = async () => {
@@ -23,8 +23,24 @@ export const Login = ({navigation}) => {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
         } catch (err) {
-            console.log(err);
-            console.log(email, " ", password, " ")
+            setVisible(true);
+            console.log(err.message)
+            switch (err.code) {
+                case 'auth/invalid-email':
+                  setErr('Invalid email address.');
+                  break;
+                case 'auth/user-disabled':
+                  setErr('User account has been disabled.');
+                  break;
+                case 'auth/user-not-found':
+                  setErr('No user found with this email.');
+                  break;
+                case 'auth/wrong-password':
+                  setErr('Wrong password.');
+                  break;
+                default:
+                    setErr('An error occurred, please try again later!', err.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -36,7 +52,23 @@ export const Login = ({navigation}) => {
             setLoading(true);
             await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
         } catch (err) {
-            console.log(err);
+            setVisible(true);
+            switch (err.code) {
+                case 'auth/email-already-in-use':
+                    setErr('Email address already in use.');
+                    break;
+                case 'auth/invalid-email':
+                    setErr('Invalid email address.');
+                    break;
+                case 'auth/operation-not-allowed':
+                    setErr('Email/password accounts not enabled.');
+                    break;
+                case 'auth/weak-password':
+                    setErr('Password is not strong enough. Make it atleast 6 characters long.');
+                    break;
+                default:
+                    setErr('An error occurred, please try again later!', err.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -47,15 +79,24 @@ export const Login = ({navigation}) => {
     return (
     <>
         <IconRegistry icons={EvaIconsPack} />
-
         <ApplicationProvider {...eva} theme = {eva.dark}>  
-            <Layout style={styles.container}>
-                <Text style= {{color: '#f7faff', textAlign: 'center'}} category='h2'>Registration</Text>
-                <Divider style= {{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
+            <Layout style = {styles.container}>
+                <Text style = {{color: '#f7faff', textAlign: 'center'}} category='h2'>Registration</Text>
+                <Divider style = {{backgroundColor: '#00E096', width: '85%', height: 1, marginTop: 10, marginBottom: 10}}/>
                 <Input style = {styles.input} placeholder = 'Enter an email' onChangeText={emailValue => setEmail(emailValue)}/> 
-                <Input style = {styles.input} caption="  If you don't have an account, an account will be made!" placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
-                <Button style= {{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signIn}>Login</Button>
-                <Button style= {{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signUp}>Sign Up</Button>
+                <Input style = {styles.input} caption="  With an account, your assessment history is saved!" placeholder = 'Enter a password' accessoryRight={eye} secureTextEntry={protectedText} onChangeText={passwordValue => setPassword(passwordValue)}/> 
+                <Button style = {{marginTop: 10, width: '45%'}} status='success' appearance='outline' onPress={signIn}>Login</Button>
+                <Button style = {{marginTop: 10, width: '30%'}} status='success' appearance='outline' onPress={signUp}>Sign Up</Button>
+                
+                <Modal backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}} visible={visible}>
+                    <Layout>
+                    <Text style = {{textAlign: 'center',}}category='h2'>Error!</Text> 
+                    <Divider/>
+                    <Text style = {{textAlign: 'center', marginTop:'2%'}}>{err}</Text>
+                    <Divider/>
+                    <Button status='danger' appearance='outline' onPress={() => setVisible(false)}>OK</Button>
+                    </Layout>
+                </Modal>
             </Layout>
         </ApplicationProvider>
     </>

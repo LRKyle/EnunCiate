@@ -45,18 +45,11 @@ export const Analyze = ({route}) => {
       setErrArr(data['errDetails']['errorType'])
       if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {prevData.push([data, searchVal])}
       console.log("On ya feet!")
-      //console.log([data, searchVal])
-      //prevData.push([data, searchVal])
     })
-    .catch((error)=> {
-      console.error(error, "sda sdasd a")
-    })
+    .catch((error)=> {console.error(error, "sda sdasd a")})
     }
     else if (isFocused && prev != -1) { //The concept works! 
-
-      console.log(prevData[prev], "YEeeeeHaw")
       setBackData(prevData[prev][0])
-      console.log(backData, "Cowboy")
       setMistakesArr(prevData[prev][0]['errDetails']['mistakes'])
       for (var i = 0; i < prevData[prev][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[prev][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[prev][0]['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(prevData[prev][0]['errDetails']['accuracyScore'])
@@ -209,6 +202,7 @@ export const Analyze = ({route}) => {
               <Text>30 ~ 0 </Text>
             </Layout>
             <Layout style={{marginBottom: '3%'}}><Text category='h2'>Sentence Evaluation</Text></Layout>
+            <Divider/>
             <Layout>    
               <Text>{highlightMistakes(searchVal, mistakesArr)}</Text>
               
