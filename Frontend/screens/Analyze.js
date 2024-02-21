@@ -43,15 +43,14 @@ export const Analyze = ({route}) => {
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
       let dataJSON = JSON.stringify([data, searchVal])
-      let exists = null
+      let exists = false
       for (var i = 0; i < prevData.length; i++) {
         let prevJSON = JSON.stringify(prevData[i])
         if (prevJSON == dataJSON) {exists = true; break;}
-        exists = false
       }
       
-      
-      //if (existsRef.current == false) {prevData.unshift([data, searchVal]);}
+      console.log(exists)
+      if (!exists) {prevData.unshift([data, searchVal]);}
     })
     .catch((error)=> {console.error(error, "sda sdasd a")})
     }
