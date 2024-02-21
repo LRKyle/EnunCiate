@@ -15,12 +15,13 @@ import { set } from 'lodash'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
-export var prevData = []//[["place", 'holder'], ['once', 'again']]
+export var prevData = [["place", 'holder'], ['once1', 'again2'], ['once3', 'again4'], ['once5', 'again6'], ['once7', 'again8'], ['once9', 'again10']]
 var userState = false
 
 function listPrevData(props) {
   //console.log(prevData)
   if (prevData.length == 0) {return <Card style={{width: '85%', marginTop: 5, marginBottom: 5, marginLeft: 15,}}><Text category='h4'>No previous data</Text></Card>}
+  if (prevData.length > 5) {prevData.pop();}
   return prevData.map((item, index) => (
     <Card key={index} style={{width: '85%', marginTop: 5, marginBottom: 5, marginLeft: 15,}} onPress={() => props.navigation.navigate('Analyze', {searchVal: item[1], langVal: "Placeholder", prev: index})}>
       <Text style={{color: 'white'}} category='h4'>{item[1].charAt(0).toUpperCase() + item[1].slice(1)}</Text>
@@ -53,8 +54,6 @@ function CustomDrawerContent(props) {
   else if (userState) {icon = 'log-out'} 
   else {icon = 'log-in'}  
 
-  if (currentScreen != 'Analyze') 
-  {
   return (
     <>
       <ApplicationProvider {...eva} theme = {eva.dark}>
@@ -79,9 +78,7 @@ function CustomDrawerContent(props) {
         </Layout>
       </ApplicationProvider>
   </>
-  );
-  }
- 
+  ); 
 }
 
 export default function App() {  

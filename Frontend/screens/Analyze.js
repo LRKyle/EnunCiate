@@ -34,7 +34,6 @@ export const Analyze = ({route}) => {
 
   useEffect(() => {
     if (isFocused && prev == -1) {
-    console.log("Lift yourself")
     ky.get(process.env.REACT_APP_API_URL)
     .then((response) => response.json())
     .then((data) => {
@@ -43,39 +42,45 @@ export const Analyze = ({route}) => {
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
-      if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {prevData.push([data, searchVal])}
-      console.log("On ya feet!")
+      //if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {console.log('Ride with me'); prevData.unshift([data, searchVal])}
+      let exists = false
+      for (var i = 0; i < prevData.length; i++) {
+        console.log(prevData[i], "IIIIIIIIIIIIIIIIIIIIIIIII")
+        console.log([data, searchVal], "WANNNNNNNNNNNNNNA BEEE")
+        if (prevData[i] == [data, searchVal]) {console.log("King"); exists = true}
+      }
+      if (exists == false) {prevData.unshift([data, searchVal]); console.log('hi')}
     })
     .catch((error)=> {console.error(error, "sda sdasd a")})
     }
-    else if (isFocused && prev != -1) { //The concept works! 
+    else if (isFocused && prev != -1) {
       setBackData(prevData[prev][0])
       setMistakesArr(prevData[prev][0]['errDetails']['mistakes'])
-      for (var i = 0; i < prevData[prev][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[prev][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[prev][0]['errDetails']['accuracyScore'][i] = 0}}
+      //for (var i = 0; i < prevData[prev][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[prev][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[prev][0]['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(prevData[prev][0]['errDetails']['accuracyScore'])
       setErrArr(prevData[prev][0]['errDetails']['errorType'])
     }
-  }, [isFocused]);
+  }, [isFocused, prev]);
 
 
   useEffect(() => {
     if (Math.round(backData['Pronunciation Score']) <= 30) {setPronunColor("#7a001e");} //Red
-    else if (Math.round(backData['Pronunciation Score']) <= 50) {setPronunColor("#d93b18");} //Yellow
+    else if (Math.round(backData['Pronunciation Score']) <= 50) {setPronunColor("#f2b035");} //Yellow
     else {setPronunColor("#317256");} //Green
 
     if (Math.round(backData['Completeness Score']) <= 30) {setCompColor("#8a0022");}
-    else if (Math.round(backData['Completeness Score']) <= 50) {setCompColor("#f26513");}
+    else if (Math.round(backData['Completeness Score']) <= 50) {setCompColor("#F7C966");}
     else {setCompColor("#398564");}
 
     if (Math.round(backData['Fluency Score']) <= 30) {setFluencyColor("#aa002a");}
-    else if (Math.round(backData['Fluency Score']) <= 50) {setFluencyColor("#f28f16");}
+    else if (Math.round(backData['Fluency Score']) <= 50) {setFluencyColor("#FBDA85");}
     else {setFluencyColor("#419873");}
 
     if (Math.round(backData['Prosody Score']) <= 30) {setProsodyColor("#bb002e");}
-    else if (Math.round(backData['Prosody Score']) <= 50) {setProsodyColor("#f2b035");}
+    else if (Math.round(backData['Prosody Score']) <= 50) {setProsodyColor("#FDEAAE");}
     else {setProsodyColor("#49ab81");}
 
-  }, []);      
+  }, [backData['Pronunciation Score'], backData['Completeness Score'], backData['Fluency Score'], backData['Prosody Score']]);      
 
 
   function highlightMistakes(sentence, mistakes) {
