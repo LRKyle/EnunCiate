@@ -15,7 +15,7 @@ import { set } from 'lodash'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
-export var prevData = [["place", 'holder'], ['once1', 'again2'], ['once3', 'again4'], ['once5', 'again6'], ['once7', 'again8'], ['once9', 'again10']]
+export var prevData = []
 var userState = false
 
 function listPrevData(props) {

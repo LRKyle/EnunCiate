@@ -30,8 +30,6 @@ export const Analyze = ({route}) => {
   const [accuracyArr, setAccuracyArr] = useState([]);
   const [errArr, setErrArr] = useState([])
 
-  const existsRef = useRef(false);
-
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -44,13 +42,16 @@ export const Analyze = ({route}) => {
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
+      let dataJSON = JSON.stringify([data, searchVal])
+      let exists = null
       for (var i = 0; i < prevData.length; i++) {
-        if (prevData[i][1] == searchVal && prevData[i][0] == backData) {
-          existsRef.current = true;
-          break;
-        }
+        let prevJSON = JSON.stringify(prevData[i])
+        if (prevJSON == dataJSON) {exists = true; break;}
+        exists = false
       }
-      if (existsRef.current == false) {prevData.unshift([data, searchVal]);}
+      
+      
+      //if (existsRef.current == false) {prevData.unshift([data, searchVal]);}
     })
     .catch((error)=> {console.error(error, "sda sdasd a")})
     }
