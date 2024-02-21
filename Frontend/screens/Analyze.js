@@ -1,4 +1,4 @@
-import React, {useState, useEffect}from 'react'
+import React, {useState, useEffect, useRef}from 'react'
 import * as eva from '@eva-design/eva'
 import {StyleSheet, View} from 'react-native'
 import {useIsFocused} from '@react-navigation/native'
@@ -30,6 +30,8 @@ export const Analyze = ({route}) => {
   const [accuracyArr, setAccuracyArr] = useState([]);
   const [errArr, setErrArr] = useState([])
 
+  const existsRef = useRef(false);
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -42,21 +44,19 @@ export const Analyze = ({route}) => {
       for (var i = 0; i < data['errDetails']['accuracyScore'].length; i++) {if (data['errDetails']['accuracyScore'][i] == undefined) {data['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(data['errDetails']['accuracyScore'])
       setErrArr(data['errDetails']['errorType'])
-      //if (!prevData.includes([data, searchVal]) && [data, searchVal] != []) {console.log('Ride with me'); prevData.unshift([data, searchVal])}
-      let exists = false
       for (var i = 0; i < prevData.length; i++) {
-        console.log(prevData[i], "IIIIIIIIIIIIIIIIIIIIIIIII")
-        console.log([data, searchVal], "WANNNNNNNNNNNNNNA BEEE")
-        if (prevData[i] == [data, searchVal]) {console.log("King"); exists = true}
+        if (prevData[i][1] == searchVal && prevData[i][0] == backData) {
+          existsRef.current = true;
+          break;
+        }
       }
-      if (exists == false) {prevData.unshift([data, searchVal]); console.log('hi')}
+      if (existsRef.current == false) {prevData.unshift([data, searchVal]);}
     })
     .catch((error)=> {console.error(error, "sda sdasd a")})
     }
     else if (isFocused && prev != -1) {
       setBackData(prevData[prev][0])
       setMistakesArr(prevData[prev][0]['errDetails']['mistakes'])
-      //for (var i = 0; i < prevData[prev][0]['errDetails']['accuracyScore'].length; i++) {if (prevData[prev][0]['errDetails']['accuracyScore'][i] == undefined) {prevData[prev][0]['errDetails']['accuracyScore'][i] = 0}}
       setAccuracyArr(prevData[prev][0]['errDetails']['accuracyScore'])
       setErrArr(prevData[prev][0]['errDetails']['errorType'])
     }
