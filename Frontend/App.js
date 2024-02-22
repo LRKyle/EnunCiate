@@ -33,6 +33,7 @@ const signOut = async () => {
   await AsyncStorage.removeItem('@loginData');
   FIREBASE_AUTH.signOut()
   .then(() => {
+    prevData = [] //if you want the signed out to clear the previous data
     console.log('User signed out!');
   })
   .catch((error) => {
@@ -88,7 +89,7 @@ function CustomDrawerContent(props) {
               name={icon}
               onPress={() => {
                 if (currentScreen == 'Login' || currentScreen == 'Analyze') {props.navigation.navigate('Search');}
-                else if (userState) {signOut(); console.log('You have been signed out!');} 
+                else if (userState) {signOut(); props.navigation.closeDrawer();} 
                 else {props.navigation.navigate('Login');}    
               }}
             />
@@ -103,7 +104,7 @@ export default function App() {
   useEffect(() => {
     FIREBASE_AUTH.onAuthStateChanged((user) => {
       if (user) {
-        console.log('User is signed in', user.uid); 
+        console.log('User is signed in'); 
         userState = true
         uID = user.uid
         getData(user.uid).then((value) => {if (value == null){return} prevData = value})
@@ -122,7 +123,7 @@ export default function App() {
       <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
         <Stack.Screen name="Search" component={Search} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none',}}/>
         <Stack.Screen name="Login" component={Login} options={{title: "", headerStyle: {backgroundColor: '#1b2137'}, headerTitleStyle: {color: 'white'},  headerTintColor: 'white', animation: 'none'}} />
-        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder", prev: -1}} options={({ navigation }) => ({ headerStyle: {backgroundColor: '#1b2137'}, title: "Results",  headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none', headerRight: () => (<Button onPress={() => navigation.goBack()} title="Go to Search" color="black"/>),})}/> 
+        <Stack.Screen name="Analyze" component={Analyze}  initialParams={{searchVal: "Placeholder", langVal: "Placeholder", prev: -1}} options={({ navigation }) => ({ headerStyle: {backgroundColor: '#1b2137'}, title: "Results",  headerTitleStyle: {color: 'white'}, headerTintColor: 'white', animation: 'none', })}/> 
       </Drawer.Navigator>
     </NavigationContainer>
   );

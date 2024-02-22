@@ -220,7 +220,7 @@ export const Analyze = ({route}) => {
               <Text>{highlightMistakes(searchVal, mistakesArr)}</Text>
               
               {selectedWord && !isCardClicked && (
-                <Card onPress={() => setIsCardClicked(true)}>
+                <Card style={{width: 180, height: 100}}onPress={() => setIsCardClicked(true)}>
                   <Text category='h6'>{selectedWord[0].toUpperCase() + selectedWord.slice(1)}</Text>
                   <Divider/> 
                   <Text>{errArr[selectedIndex]}</Text>

@@ -22,12 +22,13 @@ export const Login = ({navigation}) => {
           console.log(err, "Trouble storing data")
         }
     }
-
+    //After you log out, close the drawer
     const signIn = async () => {
         console.log('Signing in')
         try {
             await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-            storeData(FIREBASE_AUTH.currentUser)
+            await storeData([email, password])
+            navigation.navigate('Search')
         } 
         catch (err) {
             setVisible(true);
@@ -56,6 +57,8 @@ export const Login = ({navigation}) => {
         console.log('Signing up')
         try {
             await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+            await storeData([email, password])
+            navigation.navigate('Search')
         } catch (err) {
             setVisible(true);
             switch (err.code) {
@@ -93,7 +96,7 @@ export const Login = ({navigation}) => {
                 
                 <Modal backdropStyle={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}} visible={visible}>
                     <Layout>
-                    <Text style = {{textAlign: 'center',}}category='h2'>Error!</Text> 
+                    <Text style = {{textAlign: 'center',}} category='h2'>Error!</Text> 
                     <Divider/>
                     <Text style = {{textAlign: 'center', marginTop:'2%'}}>{err}</Text>
                     <Divider/>
