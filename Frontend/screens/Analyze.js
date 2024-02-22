@@ -5,13 +5,23 @@ import {useIsFocused} from '@react-navigation/native'
 import {ApplicationProvider, Card, Layout, Text, Divider, Spinner} from '@ui-kitten/components'
 import ky from 'ky'
 import {VictoryPie, VictoryAnimation, VictoryLabel} from "victory-native";
-import {prevData} from '../App'
+import {prevData, uID} from '../App'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const chartConfig = {
   backgroundGradientFrom: '#1E2923',
   backgroundGradientTo: '#08130D',
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
 };
+
+const storeData = async (value, userID) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem(`@prevData:${userID}`, jsonValue)
+  } catch (err) {
+    console.log(err, "Trouble storing data")
+  }
+}
 
 export const Analyze = ({route}) => {
   const {searchVal, langVal, prev} = route.params
@@ -48,9 +58,7 @@ export const Analyze = ({route}) => {
         let prevJSON = JSON.stringify(prevData[i])
         if (prevJSON == dataJSON) {exists = true; break;}
       }
-      
-      console.log(exists)
-      if (!exists) {prevData.unshift([data, searchVal]);}
+      if (!exists) {prevData.unshift([data, searchVal]); if (uID != null) {storeData(prevData, uID)}}
     })
     .catch((error)=> {console.error(error, "sda sdasd a")})
     }
@@ -84,7 +92,7 @@ export const Analyze = ({route}) => {
 
 
   function highlightMistakes(sentence, mistakes) {
-    sentence = sentence.toLowerCase();//The problem is that the cases aren't matching up so Omissions fall through the cracks
+    sentence = sentence.toLowerCase();
     checkMistakes = mistakes.map((word) => word.toLowerCase());
     return sentence.split(' ').map((word, index) => {
       if (checkMistakes.includes(word)) {
@@ -109,8 +117,8 @@ export const Analyze = ({route}) => {
   }
 
   const pronunciationScore = [
-    { x: 1, y: Math.round(backData['Pronunciation Score'])},//0
-    { x: 2, y: 100 - Math.round(backData['Pronunciation Score'])},//1
+    { x: 1, y: Math.round(backData['Pronunciation Score'])},
+    { x: 2, y: 100 - Math.round(backData['Pronunciation Score'])},
   ]
   const completenessScore = [
     { x: 1, y: Math.round(backData['Completeness Score'])},
@@ -252,12 +260,3 @@ const styles = StyleSheet.create({
       backgroundColor: '#1b2137'
     },
 });
-//'#4658db'
-//backData["Overall Accuracy Score"]
-//Instead of borderWidth, you could have used MarginTop and MarginLeft to position the progress bars
-//const headerOAS= (props) => (<Text {...props} style={{backgroundColor: 'white', textAlign:'center', color: 'black'}}>{backData['Overall Accuracy Score']}</Text>);
-/*else {
-  return <Text key={index}>{word} </Text>;
-  } */
-
-//{console.log(selectedWord, " || ", backData['errDetails']['errorType'], " || ",  backData['errDetails']['word'].indexOf(selectedWord))}

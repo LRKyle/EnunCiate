@@ -53,7 +53,6 @@ function main(refText, lang, audioFile, res) {
             "Fluency score: ", pronunciation_result.fluencyScore, '\n',
             "Prosody score: ", pronunciation_result.prosodyScore
         );
-        //console.log("  Word-level details:");
         _.forEach(pronunciation_result.detailResult.Words, (word, idx) => {
             console.log("    ", idx + 1, ": word: ", word.Word, "\taccuracy score: ", word.PronunciationAssessment.AccuracyScore, "\terror type: ", word.PronunciationAssessment.ErrorType, ";");
 
@@ -65,7 +64,6 @@ function main(refText, lang, audioFile, res) {
         });
         reco.close();
         
-        //console.log(pronunciation_result.detailResult, "confus")
         data = {
             "Overall Accuracy Score": [pronunciation_result.accuracyScore], 
             "Pronunciation Score": [pronunciation_result.pronunciationScore], 
@@ -99,10 +97,8 @@ app.post('/upload', upload.single('audio-record'), async (req, res) => {
         await convertToWav(inputPath, outputPath);
         console.log(outputPath)
         main(req.body.searchVal, req.body.lang, outputPath, res);
-        //res.sendStatus(200);
     } 
     catch (error) {console.error('Failed to convert file to WAV format', error); res.sendStatus(409);}
-    //fs.unlink(inputPath, (err) => {if (err) throw err;}); // In order to get rid of the data file and keep the audio ver
 })
 
 app.listen(3000, () => {console.log('Server is running on port 3000')});

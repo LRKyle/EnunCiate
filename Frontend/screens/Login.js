@@ -9,19 +9,16 @@ import {EvaIconsPack} from '@ui-kitten/eva-icons'
 export const Login = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [isLoading, setLoading] = useState(false)
     const [protectedText, setProtectedText] = useState(true)
     const [visible, setVisible] = useState(false)
     const [swap, setSwap] = useState(false)
 
     const [err, setErr] = useState('An error occurred, please try again later!');
-    const auth = FIREBASE_AUTH
 
     const signIn = async () => {
         console.log('Signing in')
         try {
-            setLoading(true);
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
         } catch (err) {
             setVisible(true);
             console.log(err.message)
@@ -41,15 +38,12 @@ export const Login = ({navigation}) => {
                 default:
                     setErr('An error occurred, please try again later!', err.message);
             }
-        } finally {
-            setLoading(false);
-        }
+        } 
     }
     
     const signUp = async () => {
         console.log('Signing up')
         try {
-            setLoading(true);
             await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
         } catch (err) {
             setVisible(true);
@@ -69,9 +63,7 @@ export const Login = ({navigation}) => {
                 default:
                     setErr('An error occurred, please try again later!', err.message);
             }
-        } finally {
-            setLoading(false);
-        }
+        } 
     }
    
     const eye = (props) => (<TouchableWithoutFeedback onPress={() => setProtectedText(!protectedText)}><Icon {...props} fill = {protectedText ? '#8F9BB3' : '#f7faff'} name={protectedText ? 'eye-off' : 'eye'}/></TouchableWithoutFeedback>);
@@ -114,7 +106,6 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         color: 'black',
         width: '85%',
-        //textAlign: 'center',
         borderColor: 'black',
         borderWidth: 1,  
         borderHeight: 5, 
@@ -124,18 +115,3 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
 });
-
-/*<Button  onPress={async () => {
-                        try {
-                            setLoading(true);
-                            await auth.signInWithEmailAndPassword(email, password);
-                            navigation.navigate('Search');
-                        } catch (e) {
-                            console.log(e);
-                        } finally {
-                            setLoading(false);
-                        }
-                    }}>Login!</Button> */
-
-//<Text style={styles.captionText}>Benefits of having an account</Text>  (It might be easier to do it this way so it's easily clickable)
-//#00E096 is the color of UI Kitten's success status
