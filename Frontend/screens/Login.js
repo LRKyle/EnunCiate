@@ -5,21 +5,31 @@ import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'fireba
 import * as eva from '@eva-design/eva'
 import {ApplicationProvider, Layout, Input, Text, Button, Icon, IconRegistry, Divider, Modal, Spinner} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [protectedText, setProtectedText] = useState(true)
     const [visible, setVisible] = useState(false)
-    const [swap, setSwap] = useState(false)
-
     const [err, setErr] = useState('An error occurred, please try again later!');
+
+    const storeData = async (value) => {
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem(`@loginData`, jsonValue)
+        } catch (err) {
+          console.log(err, "Trouble storing data")
+        }
+    }
 
     const signIn = async () => {
         console.log('Signing in')
         try {
             await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
-        } catch (err) {
+            storeData(FIREBASE_AUTH.currentUser)
+        } 
+        catch (err) {
             setVisible(true);
             console.log(err.message)
             switch (err.code) {
@@ -38,7 +48,8 @@ export const Login = ({navigation}) => {
                 default:
                     setErr('An error occurred, please try again later!', err.message);
             }
-        } 
+        }
+        
     }
     
     const signUp = async () => {

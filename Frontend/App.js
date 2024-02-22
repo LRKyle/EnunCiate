@@ -12,7 +12,6 @@ import {Search} from './screens/Search'
 import {Analyze} from './screens/Analyze'
 import {Login} from './screens/Login'
 import {FIREBASE_AUTH} from './firebase'
-import { get } from 'lodash'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
